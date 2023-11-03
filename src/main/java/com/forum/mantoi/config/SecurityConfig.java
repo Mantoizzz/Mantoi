@@ -1,5 +1,7 @@
 package com.forum.mantoi.config;
 
+import com.forum.mantoi.sys.filter.JWTAuthenticationFilter;
+import com.forum.mantoi.sys.filter.JwtAuthorizationFilter;
 import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,13 +31,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http.csrf(AbstractHttpConfigurer::disable);
 
         http.authenticationProvider(authenticationProvider());
 
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-
+        http.addFilter(new JwtAuthorizationFilter(manager(new AuthenticationConfiguration())));
+        http.addFilter(new JWTAuthenticationFilter(manager(new AuthenticationConfiguration())));
 
         return http.build();
     }

@@ -1,5 +1,6 @@
 package com.forum.mantoi.sys.model;
 
+import com.forum.mantoi.sys.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

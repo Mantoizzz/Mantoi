@@ -1,4 +1,4 @@
-package com.forum.mantoi.sys.model;
+package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

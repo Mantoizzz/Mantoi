@@ -1,7 +1,7 @@
 package com.forum.mantoi.sys.services;
 
 import com.forum.mantoi.sys.model.JwtUser;
-import com.forum.mantoi.sys.model.User;
+import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

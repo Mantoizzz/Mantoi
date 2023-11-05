@@ -13,4 +13,9 @@ public class CommonController {
         model.addAttribute("user", new RegisterRequest());
         return "register";
     }
+
+    @GetMapping("/auth/login")
+    public String login() {
+        return "login";
+    }
 }

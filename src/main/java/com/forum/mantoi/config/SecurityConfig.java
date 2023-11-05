@@ -1,10 +1,7 @@
 package com.forum.mantoi.config;
 
-import com.forum.mantoi.sys.filter.JWTAuthenticationFilter;
-import com.forum.mantoi.sys.filter.JwtAuthorizationFilter;
 import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +13,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,24 +25,24 @@ public class SecurityConfig {
 
     private final UserService userService;
 
+    private final String[] PUBLIC_URL = {"/auth/**"};
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
 
+        http.authorizeHttpRequests(config -> config.requestMatchers(PUBLIC_URL).permitAll());
+
         http.authenticationProvider(authenticationProvider());
 
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.addFilter(new JwtAuthorizationFilter(manager(new AuthenticationConfiguration())));
-        http.addFilter(new JWTAuthenticationFilter(manager(new AuthenticationConfiguration())));
-
         return http.build();
     }
 
-
     @Bean
-    public AuthenticationManager manager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
     }
 

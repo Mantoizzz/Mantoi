@@ -17,9 +17,14 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
+    /**
+     * @param email 邮箱
+     * @return UserDetails
+     * @throws UsernameNotFoundException exception
+     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByUsername(email);
         if (user.isPresent()) {
             return new JwtUser(user.get());
         } else {

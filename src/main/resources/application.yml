@@ -4,3 +4,7 @@ spring:
     url: jdbc:mysql://localhost:3306/mantoi?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root
     password: david_steam1233
+
+jwt:
+  secret: xyq0320
+  expiration: 36000000

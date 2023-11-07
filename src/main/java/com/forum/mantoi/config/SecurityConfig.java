@@ -1,5 +1,7 @@
 package com.forum.mantoi.config;
 
+import com.forum.mantoi.sys.filter.JwtAuthenticationFilter;
+import com.forum.mantoi.sys.handler.JwtTokenAuthenticationSuccessHandler;
 import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -16,6 +18,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -23,7 +28,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @AllArgsConstructor
 public class SecurityConfig {
 
-    private final UserService userService;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final JwtTokenAuthenticationSuccessHandler jwtTokenAuthenticationSuccessHandler;
 
     private final String[] PUBLIC_URL = {"/auth/**"};
 
@@ -31,11 +38,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
-
+        http.formLogin(config -> config
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .loginPage("/auth/login")
+                .loginProcessingUrl("/auth/login")
+                .successHandler(jwtTokenAuthenticationSuccessHandler)
+        );
         http.authorizeHttpRequests(config -> config.requestMatchers(PUBLIC_URL).permitAll());
-
-        http.authenticationProvider(authenticationProvider());
-
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
@@ -51,11 +62,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(userService);
-        return daoAuthenticationProvider;
-    }
 }

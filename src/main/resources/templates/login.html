@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
 </head>
 <body>
-<form method="post">
+<form method="post" th:action="@{/auth/login}">
     <label>
         <input type="email" required="required" placeholder="Email">
     </label>

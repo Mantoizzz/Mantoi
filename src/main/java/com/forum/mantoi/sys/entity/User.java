@@ -42,9 +42,9 @@ public class User {
     @JoinTable(name = "t_user_follow", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "fid")})
     private List<User> followers;
 
-    @OneToMany(targetEntity = Posting.class)
+    @OneToMany(targetEntity = Post.class)
     @JoinTable(name = "t_user_post", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
-    private List<Posting> posts;
+    private List<Post> posts;
 
     private enum Gender {
         MALE,

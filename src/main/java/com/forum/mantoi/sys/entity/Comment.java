@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -29,4 +30,8 @@ public class Comment {
     @ManyToOne(targetEntity = CommentPost.class)
     @JoinTable(name = "t_comp_com", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "cpid")})
     private CommentPost commentPost;
+
+    @Column(name = "publish")
+    private Date publishTime;
+
 }

@@ -1,12 +1,17 @@
 package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
+@Builder
 @Table(name = "t_post")
-public class Posting {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +33,13 @@ public class Posting {
 
     @Column(name = "likes")
     private Integer likes;
+
+    @Column(name = "publish")
+    private Date publishTime;
+
+    public Post() {
+
+    }
 
     /*
       浏览数准备用redis进行存储

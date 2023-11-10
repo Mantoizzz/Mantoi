@@ -4,13 +4,17 @@ import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.repository.PostingRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
 @Service
+@Transactional
 @Slf4j
 @AllArgsConstructor
 public class PostService implements PublishService<Post> {
@@ -41,5 +45,9 @@ public class PostService implements PublishService<Post> {
     @Override
     public Post modify(User author, Post object, Object request) {
         return null;
+    }
+
+    public Page<Post> findAll(Pageable pageable) {
+        return postingRepository.findAll(pageable);
     }
 }

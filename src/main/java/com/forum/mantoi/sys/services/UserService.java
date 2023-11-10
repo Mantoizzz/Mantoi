@@ -3,7 +3,10 @@ package com.forum.mantoi.sys.services;
 import com.forum.mantoi.sys.model.JwtUser;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 

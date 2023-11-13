@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post</title>
+</head>
+<body>
+
+
+<div class="content">
+    <nav>
+        <ul class="pagination" th:with="total = ${postList.totalPages}">
+            <li th:if="${postList.hasPrevious()}">
+                <a th:href="@{/post(page=${postList.previousPageable().pageNumber},size=${postList.size})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="page : ${#numbers.sequence(0, total - 1)}"><a th:href="@{/post(page=${page},size=${postList.size})}" th:text="${page + 1}">1</a></li>
+            <li th:if="${postList.hasNext()}">
+                <a th:href="@{/post(page=${postList.nextPageable().pageNumber},size=${postList.size})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <ol>
+        <li th:each="post, it : ${postList}" th:with="index = ${it.count}" th:text="${post.title + ' - '}" th:value="${postList.number * postList.size + index}">Title</li>
+    </ol>
+</div>
+</body>
+</html>

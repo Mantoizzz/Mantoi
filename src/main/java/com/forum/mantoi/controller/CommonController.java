@@ -18,4 +18,9 @@ public class CommonController {
     public String login() {
         return "login";
     }
+
+    @GetMapping("/post")
+    public String post() {
+        return "post";
+    }
 }

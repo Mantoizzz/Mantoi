@@ -34,6 +34,8 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_URL = {"/auth/**"};
 
+    private final String[] ANONYMOUS_URL = {"/homePage"};
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -45,7 +47,11 @@ public class SecurityConfig {
                 .loginProcessingUrl("/auth/login")
                 .successHandler(jwtTokenAuthenticationSuccessHandler)
         );
-        http.authorizeHttpRequests(config -> config.requestMatchers(PUBLIC_URL).permitAll());
+        http.authorizeHttpRequests(config -> config
+                .requestMatchers(PUBLIC_URL).permitAll()
+                .requestMatchers(ANONYMOUS_URL).anonymous()
+        );
+
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

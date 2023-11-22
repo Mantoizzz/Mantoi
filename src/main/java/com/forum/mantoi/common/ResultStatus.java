@@ -5,4 +5,5 @@ public interface ResultStatus {
     int getCode();
 
     String getMsg();
+
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,9 @@ public class User {
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "create")
+    private Date createTime;
 
     @Column(name = "gender")
     private Gender gender;

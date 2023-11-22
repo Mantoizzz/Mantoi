@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "t_comment_post")
+@Table(name = "t_commentPost")
 public class CommentPost {
 
     @Id
@@ -17,7 +17,7 @@ public class CommentPost {
     private String content;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinTable(name = "t_user_compost", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "cpid")})
+    @JoinTable(name = "t_user_compost", joinColumns = {@JoinColumn(name = "cpid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
     private User author;
 
     @Column(name = "likes")

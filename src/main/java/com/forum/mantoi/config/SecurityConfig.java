@@ -32,6 +32,14 @@ public class SecurityConfig {
 
     private final JwtTokenAuthenticationSuccessHandler jwtTokenAuthenticationSuccessHandler;
 
+    private final String USERNAME_PARAMETER = "email";
+
+    private final String PASSWORD_PARAMETER = "password";
+
+    private final String LOGIN_PAGE = "/auth/login";
+
+    private final String LOGIN_PROCESSING_URL = "/auth/login";
+
     private final String[] PUBLIC_URL = {"/auth/**"};
 
     private final String[] ANONYMOUS_URL = {"/homePage"};
@@ -41,10 +49,10 @@ public class SecurityConfig {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(config -> config
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .loginPage("/auth/login")
-                .loginProcessingUrl("/auth/login")
+                .usernameParameter(USERNAME_PARAMETER)
+                .passwordParameter(PASSWORD_PARAMETER)
+                .loginPage(LOGIN_PAGE)
+                .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .successHandler(jwtTokenAuthenticationSuccessHandler)
         );
         http.authorizeHttpRequests(config -> config

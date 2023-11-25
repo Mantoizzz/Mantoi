@@ -7,6 +7,7 @@ import com.forum.mantoi.sys.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,26 +21,13 @@ import java.util.*;
 @Service
 @Transactional
 @AllArgsConstructor
-public class UserService implements UserDetailsService {
+public class UserService {
+
 
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
 
-    /**
-     * @param email 邮箱
-     * @return UserDetails
-     * @throws UsernameNotFoundException exception
-     */
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(email);
-        if (user.isPresent()) {
-            return new JwtUser(user.get());
-        } else {
-            throw new UsernameNotFoundException("User not found");
-        }
-    }
 
     /**
      * 用户登录

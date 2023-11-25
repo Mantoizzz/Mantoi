@@ -1,5 +1,10 @@
 package com.forum.mantoi.sys.filter;
 
+import com.forum.mantoi.common.CommonResultStatus;
+import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.exception.UserException;
+import com.forum.mantoi.sys.repository.UserRepository;
+import com.forum.mantoi.sys.services.UserDetailsServiceImpl;
 import com.forum.mantoi.sys.services.UserService;
 import com.forum.mantoi.utils.JwtUtilities;
 import jakarta.servlet.FilterChain;
@@ -9,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @Component
@@ -24,7 +31,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtilities jwtUtilities;
 
-    private final UserService userService;
+    private final UserRepository userRepository;
+
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -33,14 +41,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtUtilities.validateToken(token)) {
             String email = jwtUtilities.extractUsername(token);
 
-            UserDetails userDetails = userService.loadUserByUsername(email);
-            if (userDetails != null) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities()
-                );
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                log.info("User authenticated with email {}", email);
+            Optional<User> user = userRepository.findByEmail(email);
+            if (user.isEmpty()) {
+                throw new UserException(CommonResultStatus.FAIL, "Email does not refer to anyone");
             }
+            UserDetails userDetails = (UserDetails) user.get();
+
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            log.info("User authenticated with email {}", email);
         }
         filterChain.doFilter(request, response);
     }

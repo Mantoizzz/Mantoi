@@ -1,15 +1,20 @@
 package com.forum.mantoi.sys.entity;
 
+import com.forum.mantoi.sys.model.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Data
-@NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "t_user")
 public class User {
 
@@ -26,17 +31,18 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "create")
-    private Date createTime;
+    @Column(name = "intro")
+    private String introduction;
 
-    @Column(name = "gender")
-    private Gender gender;
+    @Column(name = "create_time")
+    private Date createTime;
 
     @Column(name = "avatar")
     private String avatar;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private String role;
+    private Role role;
 
     @ManyToMany(targetEntity = User.class)
     @JoinTable(name = "t_user_sub", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "sid")})
@@ -50,8 +56,4 @@ public class User {
     @JoinTable(name = "t_user_post", joinColumns = {@JoinColumn(name = "uid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
     private List<Post> posts;
 
-    private enum Gender {
-        MALE,
-        FEMALE
-    }
 }

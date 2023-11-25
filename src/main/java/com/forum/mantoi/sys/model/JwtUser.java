@@ -20,6 +20,8 @@ public class JwtUser implements UserDetails {
 
     private String password;
 
+    private Role role;
+
     private Collection<? extends GrantedAuthority> authorities;
 
     private Boolean isAccountNonExpired = true;
@@ -33,6 +35,7 @@ public class JwtUser implements UserDetails {
 
     public JwtUser(User user) {
         id = user.getId();
+        role = user.getRole();
         username = getUsername();
         password = user.getPassword();
     }
@@ -40,7 +43,7 @@ public class JwtUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return role.getAuthorities();
     }
 
     @Override

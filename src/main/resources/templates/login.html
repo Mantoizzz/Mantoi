@@ -7,10 +7,10 @@
 <body>
 <form method="post" th:action="@{/auth/login}">
     <label>
-        <input type="email" required="required" placeholder="Email">
+        <input type="email" name="email" required="required" placeholder="Email">
     </label>
     <label>
-        <input type="password" required="required" placeholder="password">
+        <input type="password" name="password" required="required" placeholder="password">
     </label>
     <label>
         <input type="submit">

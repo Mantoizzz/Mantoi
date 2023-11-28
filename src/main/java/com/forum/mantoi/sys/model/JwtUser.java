@@ -18,6 +18,8 @@ public class JwtUser implements UserDetails {
 
     private String username;
 
+    private String email;
+
     private String password;
 
     private Role role;
@@ -35,8 +37,9 @@ public class JwtUser implements UserDetails {
 
     public JwtUser(User user) {
         id = user.getId();
+        email = user.getEmail();
         role = user.getRole();
-        username = getUsername();
+        username = user.getUsername();
         password = user.getPassword();
     }
 

@@ -1,4 +1,4 @@
-package com.forum.mantoi.controller.interceptor;
+package com.forum.mantoi.sys.interceptor;
 
 import com.forum.mantoi.common.annotation.LoginRequired;
 import jakarta.servlet.http.HttpServletRequest;

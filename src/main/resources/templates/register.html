@@ -8,12 +8,15 @@
 <form method="post" th:object="${user}">
     <label>
         <input type="text" th:field="*{username}" required="required" placeholder="username">
+        <span th:text="${usernameField}"></span>
     </label>
     <label>
         <input type="password" th:field="*{password}" required="required" placeholder="password">
+        <span th:text="${passwordField}"></span>
     </label>
     <label>
         <input type="email" th:field="*{email}" required="required" placeholder="email">
+        <span th:text="${emailField}"></span>
     </label>
     <input type="submit">
 </form>

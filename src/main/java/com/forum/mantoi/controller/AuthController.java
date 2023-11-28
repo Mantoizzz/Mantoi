@@ -2,20 +2,16 @@ package com.forum.mantoi.controller;
 
 
 import com.forum.mantoi.common.payload.RegisterRequest;
-import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.repository.UserRepository;
 import com.forum.mantoi.sys.services.UserService;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Controller
@@ -29,8 +25,20 @@ public class AuthController {
 
     private final UserService userService;
 
+    @GetMapping("/register")
+    public String registerGet(Model model) {
+        model.addAttribute("user", new RegisterRequest());
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String loginGet() {
+        return "login";
+    }
+
+
     @PostMapping("/register")
-    public String register(@RequestBody @Valid RegisterRequest registerRequest, Model model) {
+    public String register(RegisterRequest registerRequest, Model model) {
         Map<String, Object> map = userService.register(registerRequest);
         if (map == null || map.isEmpty()) {
             model.addAttribute("msg", "注册成功");

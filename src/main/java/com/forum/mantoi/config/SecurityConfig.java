@@ -24,7 +24,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 @AllArgsConstructor
 public class SecurityConfig {
 
@@ -32,7 +31,7 @@ public class SecurityConfig {
 
     private final JwtTokenAuthenticationSuccessHandler jwtTokenAuthenticationSuccessHandler;
 
-    private final String USERNAME_PARAMETER = "email";
+    private final String EMAIL_PARAMETER = "email";
 
     private final String PASSWORD_PARAMETER = "password";
 
@@ -40,7 +39,7 @@ public class SecurityConfig {
 
     private final String LOGIN_PROCESSING_URL = "/auth/login";
 
-    private final String[] PUBLIC_URL = {"/auth/**"};
+    private final String[] PUBLIC_URL = {"/auth/**", "/homePage"};
 
     private final String[] ANONYMOUS_URL = {"/homePage"};
 
@@ -48,17 +47,16 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
+
         http.formLogin(config -> config
-                .usernameParameter(USERNAME_PARAMETER)
+                .usernameParameter(EMAIL_PARAMETER)
                 .passwordParameter(PASSWORD_PARAMETER)
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .successHandler(jwtTokenAuthenticationSuccessHandler)
+
         );
-        http.authorizeHttpRequests(config -> config
-                .requestMatchers(PUBLIC_URL).permitAll()
-                .requestMatchers(ANONYMOUS_URL).anonymous()
-        );
+
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

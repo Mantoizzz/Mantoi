@@ -98,4 +98,9 @@ class MantoiApplicationTests {
         commentPostRepository.save(commentPost);
     }
 
+    @Test
+    void test4Authentication() {
+        String email = "641538994@qq.com";
+    }
+
 }

@@ -1,12 +1,16 @@
 package com.forum.mantoi;
 
+import com.forum.mantoi.common.payload.CommentRequest;
 import com.forum.mantoi.common.payload.PostRequest;
+import com.forum.mantoi.sys.entity.Comment;
 import com.forum.mantoi.sys.entity.CommentPost;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.model.Role;
 import com.forum.mantoi.sys.repository.CommentPostRepository;
+import com.forum.mantoi.sys.repository.CommentRepository;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.sys.repository.UserRepository;
+import com.forum.mantoi.sys.services.CommentService;
 import com.forum.mantoi.sys.services.PostService;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
@@ -27,7 +31,13 @@ class MantoiApplicationTests {
     private CommentPostRepository commentPostRepository;
 
     @Autowired
+    private CommentRepository commentRepository;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CommentService commentService;
 
     @Autowired
     private PostRepository postRepository;
@@ -65,7 +75,14 @@ class MantoiApplicationTests {
 
     @Test
     void addComment() {
-
+        User user = userRepository.findByEmail("641538994@qq.com").get();
+        CommentRequest commentRequest = new CommentRequest();
+        commentRequest.setCommentPost(commentPostRepository.findById(1L).get());
+        commentRequest.setLikes(9);
+        commentRequest.setPublishTime(new Date());
+        commentRequest.setComment(new ArrayList<>());
+        commentRequest.setContent("简直就是我");
+        commentService.publish(user, commentRequest);
     }
 
     @Test

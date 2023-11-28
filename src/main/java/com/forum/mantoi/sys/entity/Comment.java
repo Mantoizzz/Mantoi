@@ -1,11 +1,13 @@
 package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
+@Data
 @Table(name = "t_comment")
 public class Comment {
 

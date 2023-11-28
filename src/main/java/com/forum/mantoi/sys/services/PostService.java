@@ -3,7 +3,7 @@ package com.forum.mantoi.sys.services;
 import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
-import com.forum.mantoi.sys.repository.PostingRepository;
+import com.forum.mantoi.sys.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 public class PostService implements PublishService<Post> {
 
-    private final PostingRepository postingRepository;
+    private final PostRepository postRepository;
 
     @Override
     public Post publish(User author, Object request) {
@@ -32,14 +32,14 @@ public class PostService implements PublishService<Post> {
                 .commentPosts(new ArrayList<>())
                 .likes(0)
                 .build();
-        postingRepository.save(post);
+        postRepository.save(post);
         return post;
     }
 
     @Override
     public void delete(Long id) {
-        Post deletePost = postingRepository.findPostById(id).orElseThrow();
-        postingRepository.delete(deletePost);
+        Post deletePost = postRepository.findPostById(id).orElseThrow();
+        postRepository.delete(deletePost);
     }
 
     @Override
@@ -47,7 +47,11 @@ public class PostService implements PublishService<Post> {
         return null;
     }
 
+    public void addLike(User user, Post post) {
+        //TODO 使用Redis对点赞数进行存储
+    }
+
     public Page<Post> findAll(Pageable pageable) {
-        return postingRepository.findAll(pageable);
+        return postRepository.findAll(pageable);
     }
 }

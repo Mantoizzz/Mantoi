@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentPostingRepository extends JpaRepository<CommentPost, Long> {
+public interface CommentPostRepository extends JpaRepository<CommentPost, Long> {
 }

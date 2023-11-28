@@ -1,12 +1,18 @@
 package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "t_commentPost")
+@Data
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
+
+@Table(name = "t_commentpost")
 public class CommentPost {
 
     @Id

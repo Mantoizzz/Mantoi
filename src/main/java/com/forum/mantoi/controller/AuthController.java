@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -38,7 +39,7 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public String register(RegisterRequest registerRequest, Model model) {
+    public String register(@ModelAttribute(name = "user") RegisterRequest registerRequest, Model model) {
         Map<String, Object> map = userService.register(registerRequest);
         if (map == null || map.isEmpty()) {
             model.addAttribute("msg", "注册成功");

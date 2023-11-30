@@ -54,7 +54,6 @@ public class SecurityConfig {
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .successHandler(jwtTokenAuthenticationSuccessHandler)
-
         );
 
 

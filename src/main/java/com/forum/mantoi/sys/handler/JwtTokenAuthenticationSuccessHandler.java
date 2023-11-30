@@ -11,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -25,6 +27,8 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
 
     private final UserRepository userRepository;
 
+    private final RedisTemplate<String, String> redisTemplate;
+
     private final JwtUtilities jwtUtilities;
 
     @Override
@@ -34,9 +38,10 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
         User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UserException(CommonResultStatus.FAIL, "User not found"));
         JwtUser jwtUser = new JwtUser(user);
         String token = jwtUtilities.generateToken(user.getEmail(), jwtUser.getAuthorities());
+
         log.info("token:{}", token);
+        redisTemplate.opsForValue().set("token", token);
         response.setHeader(Constants.JWT_HEADER, token);
-        response.sendRedirect("/homePage");
     }
 
 }

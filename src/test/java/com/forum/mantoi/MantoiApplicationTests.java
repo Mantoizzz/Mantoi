@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
@@ -38,6 +39,9 @@ class MantoiApplicationTests {
 
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
 
     @Autowired
     private PostRepository postRepository;
@@ -101,6 +105,11 @@ class MantoiApplicationTests {
     @Test
     void test4Authentication() {
         String email = "641538994@qq.com";
+    }
+
+    @Test
+    void test4Redis() {
+        redisTemplate.opsForValue().set("hall", "frums");
     }
 
 }

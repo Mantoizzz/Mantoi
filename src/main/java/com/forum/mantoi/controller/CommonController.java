@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class CommonController {
 
-    @GetMapping("/post")
-    public String post() {
-        return "post";
+    @GetMapping("/homePage")
+    public String homePage() {
+        return "homePage";
     }
 }

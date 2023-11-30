@@ -15,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,12 +32,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtilities jwtUtilities;
 
+    private final RedisTemplate<String, String> redisTemplate;
+
     private final UserRepository userRepository;
 
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtUtilities.getToken(request);
+        String token = redisTemplate.opsForValue().get("token");
+        log.info("token:{}", token);
 
         if (token != null && jwtUtilities.validateToken(token)) {
             String email = jwtUtilities.extractUsername(token);

@@ -1,8 +1,10 @@
 package com.forum.mantoi.sys.filter;
 
 import com.forum.mantoi.common.CommonResultStatus;
+import com.forum.mantoi.common.Constants;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.exception.UserException;
+import com.forum.mantoi.sys.model.JwtUser;
 import com.forum.mantoi.sys.repository.UserRepository;
 import com.forum.mantoi.sys.services.UserDetailsServiceImpl;
 import com.forum.mantoi.sys.services.UserService;
@@ -39,8 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = redisTemplate.opsForValue().get("token");
-        log.info("token:{}", token);
+        String token = request.getHeader(Constants.JWT_HEADER);
 
         if (token != null && jwtUtilities.validateToken(token)) {
             String email = jwtUtilities.extractUsername(token);
@@ -49,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (user.isEmpty()) {
                 throw new UserException(CommonResultStatus.FAIL, "Email does not refer to anyone");
             }
-            UserDetails userDetails = (UserDetails) user.get();
+            UserDetails userDetails = new JwtUser(user.get());
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities()

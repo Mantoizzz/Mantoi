@@ -1,6 +1,6 @@
 package com.forum.mantoi.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +12,10 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
+@AllArgsConstructor
 public class RedisConfig {
 
-    @Autowired
-    private FastJson2JsonRedisSerializer serializer;
+    private final FastJson2JsonRedisSerializer serializer;
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {

@@ -34,8 +34,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtilities jwtUtilities;
 
-    private final RedisTemplate<String, String> redisTemplate;
-
     private final UserRepository userRepository;
 
 

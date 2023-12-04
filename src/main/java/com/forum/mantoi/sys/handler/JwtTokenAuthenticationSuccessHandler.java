@@ -27,8 +27,6 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
 
     private final UserRepository userRepository;
 
-    private final RedisTemplate<String, String> redisTemplate;
-
     private final JwtUtilities jwtUtilities;
 
     @Override
@@ -40,7 +38,6 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
         String token = jwtUtilities.generateToken(user.getEmail(), jwtUser.getAuthorities());
 
         log.info("token:{}", token);
-        redisTemplate.opsForValue().set("token", token);
         response.setHeader(Constants.JWT_HEADER, token);
     }
 

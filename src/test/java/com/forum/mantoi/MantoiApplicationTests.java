@@ -12,6 +12,7 @@ import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.sys.repository.UserRepository;
 import com.forum.mantoi.sys.services.CommentService;
 import com.forum.mantoi.sys.services.PostService;
+import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,9 @@ class MantoiApplicationTests {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private UserService userService;
 
     @Test
     void addUser() {
@@ -110,6 +114,13 @@ class MantoiApplicationTests {
     @Test
     void test4Redis() {
         redisTemplate.opsForValue().set("hall", "frums");
+    }
+
+    @Test
+    void test4Sub() {
+        User user = userRepository.findByUsername("馒头龙").get();
+        User target = userRepository.findByUsername("馒头蟹没头绪").get();
+        userService.subscribe(user, target);
     }
 
 }

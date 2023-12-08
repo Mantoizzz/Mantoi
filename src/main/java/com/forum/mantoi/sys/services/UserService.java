@@ -1,7 +1,10 @@
 package com.forum.mantoi.sys.services;
 
+import com.forum.mantoi.common.CommonResultStatus;
 import com.forum.mantoi.common.payload.RegisterRequest;
+import com.forum.mantoi.common.payload.UserInfoRequest;
 import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,6 +26,63 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * user 我自己
+     * target 我要关注的人
+     *
+     * @param userId   userId
+     * @param targetId targetId
+     */
+    public void subscribe(long userId, long targetId) {
+        Optional<User> optional = userRepository.findById(userId);
+        User user;
+        User target;
+        if (optional.isPresent()) {
+            user = optional.get();
+        } else {
+            throw new UserException(CommonResultStatus.FAIL, "User does not exit");
+        }
+        optional = userRepository.findById(targetId);
+        if (optional.isPresent()) {
+            target = optional.get();
+        } else {
+            throw new UserException(CommonResultStatus.FAIL, "Target does not exit");
+        }
+        subscribe(user, target);
+    }
+
+    /**
+     * user 我自己
+     * target 我要关注的人
+     *
+     * @param user   我
+     * @param target 对方
+     */
+    public void subscribe(User user, User target) {
+        user.getSubscribers().add(target);
+        target.getFollowers().add(user);
+    }
+
+    /**
+     * 修改个人信息
+     *
+     * @param userId          userId
+     * @param userInfoRequest payload
+     */
+    public void updateUserInfo(long userId, UserInfoRequest userInfoRequest) {
+        Optional<User> updateUser = userRepository.findById(userId);
+        if (updateUser.isPresent()) {
+            userRepository.updateUser(
+                    userInfoRequest.getUsername()
+                    , userInfoRequest.getEmail()
+                    , userInfoRequest.getIntroduction()
+                    , userInfoRequest.getAvatar()
+                    , userId
+            );
+        } else {
+            throw new UserException(CommonResultStatus.FAIL, "User does not exit");
+        }
+    }
 
     /**
      * 用户登录
@@ -60,6 +120,5 @@ public class UserService {
 
     }
 
-    //TODO:CaptchaController
 
 }

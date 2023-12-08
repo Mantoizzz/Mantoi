@@ -48,4 +48,9 @@ public class LikeService {
         throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "Likes does not exits");
     }
 
+    public boolean isLiked(Entity entity, long entityId, long userId) {
+        String entityLikeSetKeyName = RedisKeys.getEntityLikeSetKey(entity, entityId);
+        return Boolean.TRUE.equals(redisTemplate.opsForSet().isMember(entityLikeSetKeyName, userId));
+    }
+
 }

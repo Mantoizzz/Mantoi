@@ -11,10 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional
@@ -30,10 +27,25 @@ public class UserService {
      * user 我自己
      * target 我要关注的人
      *
-     * @param userId   userId
-     * @param targetId targetId
+     * @param user   我
+     * @param target 对方
      */
-    public void subscribe(long userId, long targetId) {
+    @Transactional
+    public void subscribe(User user, User target) {
+        user.getSubscribers().add(target);
+        target.getFollowers().add(user);
+        userRepository.save(user);
+        userRepository.save(target);
+    }
+
+    /**
+     * 订阅功能的预处理
+     *
+     * @param userId   我的id
+     * @param targetId 对方id
+     * @param sub      true->关注;false->取关
+     */
+    public void processSubscribe(Long userId, Long targetId, boolean sub) {
         Optional<User> optional = userRepository.findById(userId);
         User user;
         User target;
@@ -48,19 +60,25 @@ public class UserService {
         } else {
             throw new UserException(CommonResultStatus.FAIL, "Target does not exit");
         }
-        subscribe(user, target);
+        if (sub) {
+            subscribe(user, target);
+        } else {
+            unSubscribe(user, target);
+        }
     }
 
     /**
-     * user 我自己
-     * target 我要关注的人
+     * 取消订阅
      *
      * @param user   我
-     * @param target 对方
+     * @param target 要取消的人
      */
-    public void subscribe(User user, User target) {
-        user.getSubscribers().add(target);
-        target.getFollowers().add(user);
+    @Transactional
+    public void unSubscribe(User user, User target) {
+        user.getSubscribers().remove(target);
+        target.getFollowers().remove(user);
+        userRepository.save(user);
+        userRepository.save(target);
     }
 
     /**
@@ -69,6 +87,7 @@ public class UserService {
      * @param userId          userId
      * @param userInfoRequest payload
      */
+    @Transactional
     public void updateUserInfo(long userId, UserInfoRequest userInfoRequest) {
         Optional<User> updateUser = userRepository.findById(userId);
         if (updateUser.isPresent()) {

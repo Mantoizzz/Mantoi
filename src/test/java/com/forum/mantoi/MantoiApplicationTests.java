@@ -22,6 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 @SpringBootTest
 class MantoiApplicationTests {
@@ -120,7 +121,14 @@ class MantoiApplicationTests {
     void test4Sub() {
         User user = userRepository.findByUsername("馒头龙").get();
         User target = userRepository.findByUsername("馒头蟹没头绪").get();
-        userService.subscribe(user, target);
+        userService.unSubscribe(user, target);
+    }
+
+    @Test
+    void test4unSub() {
+        User user = userRepository.findByUsername("馒头龙").get();
+        User target = userRepository.findByUsername("馒头蟹没头绪").get();
+        userService.unSubscribe(user, target);
     }
 
 }

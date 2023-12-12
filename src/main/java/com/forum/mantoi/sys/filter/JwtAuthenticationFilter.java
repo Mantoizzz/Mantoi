@@ -9,6 +9,7 @@ import com.forum.mantoi.sys.repository.UserRepository;
 import com.forum.mantoi.sys.services.UserDetailsServiceImpl;
 import com.forum.mantoi.sys.services.UserService;
 import com.forum.mantoi.utils.JwtUtilities;
+import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserRepository userRepository;
 
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
@@ -49,7 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new UserException(CommonResultStatus.FAIL, "Email does not refer to anyone");
             }
             UserDetails userDetails = new JwtUser(user.get());
-
+            String blacklistTokenKey = RedisKeys.getBlackListTokenKey(userDetails.getUsername());
+            if (Boolean.TRUE.equals(redisTemplate.hasKey(blacklistTokenKey))) {
+                filterChain.doFilter(request, response);
+            }
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities()
             );

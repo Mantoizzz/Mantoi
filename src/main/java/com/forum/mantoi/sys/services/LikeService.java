@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class LikeService {
 
-    private final RedisTemplate<String, Long> redisTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     public void addLike(long userId, long objId, Entity objEntity) {
@@ -43,7 +43,7 @@ public class LikeService {
     public long viewLikes(Entity entity, long entityId) {
         String entityLikeCountKeyName = RedisKeys.getEntityLikeCountKey(entity, entityId);
         if (Boolean.TRUE.equals(redisTemplate.hasKey(entityLikeCountKeyName))) {
-            return redisTemplate.opsForValue().get(entityLikeCountKeyName);
+            return (long) redisTemplate.opsForValue().get(entityLikeCountKeyName);
         }
         throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "Likes does not exits");
     }

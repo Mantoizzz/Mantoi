@@ -13,11 +13,17 @@ public class RedisKeys {
 
     private static final String SPLIT = ":";
 
+    private static final String BLACK_TOKEN_PREFIX = "blackListToken";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
 
     public static String getEntityLikeCountKey(Entity entity, Long id) {
         return ENTITY_LIKE_COUNT_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
+    }
+
+    public static String getBlackListTokenKey(String username) {
+        return BLACK_TOKEN_PREFIX + SPLIT + username;
     }
 }

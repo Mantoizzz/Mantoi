@@ -43,6 +43,8 @@ public class SecurityConfig {
 
     private final String[] ANONYMOUS_URL = {"/homePage"};
 
+    private final String LOGOUT_URL = "/auth/logout";
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -54,6 +56,13 @@ public class SecurityConfig {
                 .loginPage(LOGIN_PAGE)
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .successHandler(jwtTokenAuthenticationSuccessHandler)
+        );
+
+        http.logout(config -> config
+                .logoutUrl(LOGOUT_URL)
+                .clearAuthentication(true)
+
+
         );
 
 

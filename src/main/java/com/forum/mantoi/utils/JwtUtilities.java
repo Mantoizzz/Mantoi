@@ -16,6 +16,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Slf4j
@@ -58,7 +59,7 @@ public class JwtUtilities {
 
     public String generateToken(String email, Collection<? extends GrantedAuthority> roles) {
         return Jwts.builder().setSubject(email).claim("role", roles).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(Date.from(Instant.now().plus(jwtExpiration, ChronoUnit.MILLIS)))
+                .setExpiration(Date.from(Instant.now().plus(jwtExpiration, TimeUnit.DAYS.toChronoUnit())))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 

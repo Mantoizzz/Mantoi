@@ -12,4 +12,4 @@ spring:
 
 jwt:
   secret: xyq0320
-  expiration: 36000000
+  expiration: 7

@@ -131,4 +131,9 @@ class MantoiApplicationTests {
         userService.unSubscribe(user, target);
     }
 
+    @Test
+    void test() {
+        System.out.println("Testing");
+    }
+
 }

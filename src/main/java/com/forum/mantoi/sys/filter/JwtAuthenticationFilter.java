@@ -6,8 +6,6 @@ import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.JwtUser;
 import com.forum.mantoi.sys.repository.UserRepository;
-import com.forum.mantoi.sys.services.UserDetailsServiceImpl;
-import com.forum.mantoi.sys.services.UserService;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.FilterChain;
@@ -17,7 +15,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token = request.getHeader(Constants.JWT_HEADER);
 
         if (token != null && jwtUtilities.validateToken(token)) {
-            String email = jwtUtilities.extractUsername(token);
+            String email = jwtUtilities.extractEmail(token);
 
             Optional<User> user = userRepository.findByEmail(email);
             if (user.isEmpty()) {

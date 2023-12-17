@@ -15,6 +15,8 @@ public class RedisKeys {
 
     private static final String BLACK_TOKEN_PREFIX = "blackListToken";
 
+    private static final String WEBSOCKET_LIST_PREFIX = "websocket:";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -25,5 +27,9 @@ public class RedisKeys {
 
     public static String getBlackListTokenKey(String username) {
         return BLACK_TOKEN_PREFIX + SPLIT + username;
+    }
+
+    public static String getWebsocketListKey(String email) {
+        return WEBSOCKET_LIST_PREFIX + email;
     }
 }

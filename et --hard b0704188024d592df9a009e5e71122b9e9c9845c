@@ -1,0 +1,221 @@
+[33mcommit b4ff77c4ed9201597a2e5356cbe2538659e35094[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Kanon <116716120+Mantoizzz@users.noreply.github.com>
+Date:   Sat Dec 16 19:08:11 2023 +0800
+
+    Update README.md
+
+[33mcommit 5c1e6fa585575697ff4955edbf11c60530b197be[m
+Author: Kanon <116716120+Mantoizzz@users.noreply.github.com>
+Date:   Sat Dec 16 19:05:37 2023 +0800
+
+    Create README.md
+
+[33mcommit 9f4425fe741b795e718c070f77e009815313d651[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Sat Dec 16 18:59:08 2023 +0800
+
+    添加WebSocket聊天功能
+    添加WebSocketServer.Java
+
+[33mcommit 4097373c0721dfdcc1fce81245ba746f69b3703f[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Dec 15 23:15:52 2023 +0800
+
+    Add ElasticTests.java
+
+[33mcommit ee4d02919e5bdd6d940f1fc2f37ad35be2d785cd[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Thu Dec 14 23:33:10 2023 +0800
+
+    Config ElasticSearch
+
+[33mcommit b0704188024d592df9a009e5e71122b9e9c9845c[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Tue Dec 12 23:20:56 2023 +0800
+
+    添加了用户logout功能(未测试)
+    实现了用户订阅、取消订阅功能(已完成测试)
+
+[33mcommit cc36c40af76fa3c50b1327b456b4c7178be506bb[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Dec 8 14:07:50 2023 +0800
+
+    config redis
+    add some on UserService
+
+[33mcommit 8ad8918ad557dcf914fab49e67390dd44159300b[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Tue Dec 5 23:37:00 2023 +0800
+
+    add LikeService.java
+    Use Redis to save the likes
+
+[33mcommit dfc39a8f11e91d627266f69f5a67e9a45b416228[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Mon Dec 4 22:54:02 2023 +0800
+
+    不再使用redis缓存来保存jwt
+
+[33mcommit 30a2cf0a702ddc6b809dfa93085f8a99d3ad66b5[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Mon Dec 4 22:25:42 2023 +0800
+
+    再也不想管jwt了，就这样吧
+
+[33mcommit a84e4dc0ed7b59cc1eb90da39d51ff5c4ac1f6aa[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Thu Nov 30 22:22:21 2023 +0800
+
+    fuck redis
+
+[33mcommit 86622324c52a42a56587c59f4b275b2fc4f4df67[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 29 21:07:47 2023 +0800
+
+    add @ModelAttribute on AuthController.java
+
+[33mcommit e82e28de830f9a512a556ba945da09dfc5070f91[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 29 00:31:28 2023 +0800
+
+    修复了在SpringSecurity默认登录引发的StackOverflow问题:
+    add @Service on UserDetailsServiceImpl.java
+    fix login form in login.html
+
+[33mcommit 0761ac321e397728e600378432a503b0ff55be6f[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Tue Nov 28 21:58:44 2023 +0800
+
+    12345||1=1
+
+[33mcommit c0ba9435862d9d46de9066a6550072ddc4563c93[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Tue Nov 28 21:30:49 2023 +0800
+
+    摸鱼你别看了
+
+[33mcommit b37f3c7c708e8a2fde097a6ae4facc2446f7b64f[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Sat Nov 25 18:09:15 2023 +0800
+
+    修复Spring依赖注入问题
+    修改SpringSecurity authorities问题
+    为Repository添加注解
+    测试向数据库添加user
+
+[33mcommit 4b3e3f66e136091d9559a4df0cc57291d47da447[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Sat Nov 25 17:11:08 2023 +0800
+
+    update
+
+[33mcommit 5ea37fee376b1ef3d30460a091726adcd9fd6096[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 22 22:20:29 2023 +0800
+
+    add manythings
+
+[33mcommit 1556ea7d89b4d1a8c47c08e10d99818c3fcfb478[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 22 21:18:46 2023 +0800
+
+    add many tables
+
+[33mcommit ea2707f571b19087a11c2198660e00be3bbed5d5[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 22 20:53:03 2023 +0800
+
+    config some table
+
+[33mcommit be4abdb327a1ca8f8890291797dfc568f95340dc[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 17 22:53:05 2023 +0800
+
+    Update RedisConfig.java
+
+[33mcommit f8c42405613fc3e2dea4f0c19c89eb16abc0c4e0[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 17 22:51:48 2023 +0800
+
+    add RedisUtils.java
+
+[33mcommit 3f45fd5652abf34db2cb733901eb17a0ab42f092[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 17 22:44:30 2023 +0800
+
+    config RedisConfig
+
+[33mcommit 300f9137ce476e96f6a9417e82a8535201ec5c6a[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 15 21:21:07 2023 +0800
+
+    add something new
+
+[33mcommit b5539a921f262d79f6dd1b01189762de166884fa[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Mon Nov 13 21:49:20 2023 +0800
+
+    add Paging of Post
+
+[33mcommit 755c62e275015b49528580cea618eaa4528e81fb[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 10 17:47:24 2023 +0800
+
+    add something new
+
+[33mcommit f75529f4042da2c7fe828a0dd501fe9fd150c5e9[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Thu Nov 9 20:48:36 2023 +0800
+
+    add something new
+
+[33mcommit 06c5e461411deac4e603a1d235a6610ff79d45d0[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 8 20:48:08 2023 +0800
+
+    add repositories
+
+[33mcommit a5b8586d4e856cba3dc367fb74130e33a7e0fe2e[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Wed Nov 8 17:24:41 2023 +0800
+
+    add some entities such as Posting, Comment
+
+[33mcommit c73e24f4fa3d28479362a7dcb0d6f2cc47e5bcc3[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Tue Nov 7 21:46:18 2023 +0800
+
+    delete some class
+    add jwt-token
+
+[33mcommit f801b7a57bd75a8b959e123a0f3e618f6e806c76[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Sun Nov 5 23:51:34 2023 +0800
+
+    add datasource
+    delete JWTfilter
+    add hutool
+
+[33mcommit f02fc7653d46a16deaa2419059db5049795eb926[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Sat Nov 4 23:48:49 2023 +0800
+
+    add register.html
+
+[33mcommit 28759466cef8bdd81c11966593ee6be7fe63668a[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 3 23:49:24 2023 +0800
+
+    make it better
+
+[33mcommit 490dca8a6e64c2d7076182bdcb4c65b35cdc369e[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 3 23:27:33 2023 +0800
+
+    make it better
+
+[33mcommit 7ddeb7dec4a360a87a649e2dfdc3e350ab0a7ad8[m
+Author: Mantoizzz <641538994@qq.com>
+Date:   Fri Nov 3 21:23:47 2023 +0800
+
+    add new filter

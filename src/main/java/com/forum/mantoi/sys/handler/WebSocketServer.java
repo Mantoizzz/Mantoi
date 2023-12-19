@@ -4,9 +4,7 @@ package com.forum.mantoi.sys.handler;
 import com.alibaba.fastjson.JSON;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
-import jakarta.websocket.OnMessage;
-import jakarta.websocket.OnOpen;
-import jakarta.websocket.Session;
+import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.AllArgsConstructor;
@@ -29,9 +27,18 @@ public class WebSocketServer {
 
 
     private final StringRedisTemplate stringRedisTemplate;
-
+    /*
+    Key:User's email
+    Value:User's session
+     */
     private static final ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
 
+    /**
+     * 用户开启WebSocket
+     *
+     * @param session session
+     * @param token   携带token
+     */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "token") String token) {
         String email = jwtUtilities.extractEmail(token);
@@ -49,7 +56,12 @@ public class WebSocketServer {
         }
     }
 
-
+    /**
+     * 客户端发来Message的时候干的事
+     *
+     * @param msg     msg
+     * @param session session
+     */
     @OnMessage
     public void onMessage(String msg, Session session) {
         String email = (String) session.getUserProperties().get("email");
@@ -64,7 +76,26 @@ public class WebSocketServer {
         sendMessage(target, message.getContent());
 
     }
-    //TODO:@OnClose和@OnError需要补全
+
+    /**
+     * 关闭连接
+     *
+     * @param session session
+     * @param token   token
+     */
+    @OnClose
+    public void onClose(Session session, @PathParam(value = "token") String token) {
+        String email = (String) session.getUserProperties().get("email");
+        log.info("WebSocket:User {} is closing", email);
+        sessionMap.remove(email);
+    }
+
+    @OnError
+    public void onError(Throwable throwable, Session session) {
+        log.info("WebSocket:{}", throwable.getMessage());
+        String email = (String) session.getUserProperties().get("email");
+        sessionMap.remove(email);
+    }
 
 
     /**

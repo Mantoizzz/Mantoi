@@ -8,7 +8,11 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+  elasticsearch:
 
+    username: elastic
+    password: VP=CbKpMr3zJ2jtAl4PG
+    uris: https://localhost:9200
 
 jwt:
   secret: xyq0320

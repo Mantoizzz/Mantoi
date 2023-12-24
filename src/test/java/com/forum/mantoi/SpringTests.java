@@ -9,4 +9,9 @@ public class SpringTests {
     void test() {
         System.out.println("成功启动SpringBoot");
     }
+
+    @Test
+    void another() {
+        System.out.println(123);
+    }
 }

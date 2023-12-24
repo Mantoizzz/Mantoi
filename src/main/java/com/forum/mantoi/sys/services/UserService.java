@@ -99,7 +99,7 @@ public class UserService {
                     , userId
             );
         } else {
-            throw new UserException(CommonResultStatus.FAIL, "User does not exit");
+            throw new UserException(CommonResultStatus.FAIL, "User does not exist");
         }
     }
 
@@ -137,6 +137,15 @@ public class UserService {
         userRepository.save(regisUser);
         return map;
 
+    }
+
+    public User findUserById(Long id) {
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isPresent()) {
+            return optional.get();
+        } else {
+            throw new UserException(CommonResultStatus.FAIL, "User not found");
+        }
     }
 
 

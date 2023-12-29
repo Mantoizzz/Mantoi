@@ -8,16 +8,16 @@ Working on it.
 
 ### 已完成
 
-* 使用Redis的set实现点赞，取消点赞
-* 使用SpringSecurity自定义Security认证流程
-* 引入JWT Token替代传统Session，采用Redis存储“黑名单”Token
-* 使用WebSocket实现私聊功能
+* 使用Redis的set实现点赞，取消点赞✅
+* 使用SpringSecurity自定义Security认证流程✅
+* 引入JWT Token替代传统Session，采用Redis存储“黑名单”Token✅
+* 使用WebSocket实现私聊功能✅
 
 
 
 ### TODO
 
-* ElasticSearch实现搜索
+* ElasticSearch实现搜索✅
 * 敏感词过滤系统
 * Nginx实现反向代理
 * 搞点分布式

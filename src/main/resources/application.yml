@@ -13,6 +13,11 @@ spring:
     username: elastic
     password: VP=CbKpMr3zJ2jtAl4PG
     uris: https://localhost:9200
+  cache:
+    cache-names: cache
+    caffeine:
+      spec: initialCapacity=50,maximumSize=500,expireAfterWrite=10m
+    type: caffeine
 
 jwt:
   secret: xyq0320

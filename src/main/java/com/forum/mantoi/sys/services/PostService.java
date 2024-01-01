@@ -4,11 +4,13 @@ import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.repository.PostRepository;
+import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,6 +22,10 @@ import java.util.ArrayList;
 public class PostService implements PublishService<Post> {
 
     private final PostRepository postRepository;
+
+    private final RedisTemplate<String, Object> redisTemplate;
+
+    private final Cache<String, Object> caffeineCache;
 
     @Override
     public Post publish(User author, Object request) {

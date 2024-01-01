@@ -17,6 +17,8 @@ public class RedisKeys {
 
     private static final String WEBSOCKET_LIST_PREFIX = "websocket:";
 
+    private static final String POST_SCORE_SET = "post:score";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -32,4 +34,9 @@ public class RedisKeys {
     public static String getWebsocketListKey(String email) {
         return WEBSOCKET_LIST_PREFIX + email;
     }
+
+    public static String getPostScoreSet() {
+        return POST_SCORE_SET;
+    }
+
 }

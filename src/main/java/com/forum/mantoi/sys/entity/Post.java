@@ -1,10 +1,10 @@
 package com.forum.mantoi.sys.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
@@ -41,8 +41,12 @@ public class Post {
     @Column(name = "publish")
     private Date publishTime;
 
+    @Column(name = "score")
+    private Double score;
+
     /*
       浏览数准备用redis进行存储
      */
+    //TODO 存储浏览数
 
 }

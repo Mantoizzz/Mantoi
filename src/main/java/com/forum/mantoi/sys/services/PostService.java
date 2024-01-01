@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -59,5 +60,13 @@ public class PostService implements PublishService<Post> {
 
     public Page<Post> findAll(Pageable pageable) {
         return postRepository.findAll(pageable);
+    }
+
+    public Optional<Post> findById(Long postId) {
+        return postRepository.findById(postId);
+    }
+
+    public int updateScore(Long postId, double score) {
+        return postRepository.updatePostScore(postId, score);
     }
 }

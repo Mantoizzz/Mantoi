@@ -2,7 +2,8 @@
 
 一个基于SpringBoot3+SpringSecurity6+SpringData JPA+Redis+ElasticSearch的仿牛客网求职就业论坛
 
-本项目灵感来源于https://github.com/cosen1024/community.在上面有所改动和修改。
+本项目灵感来源于https://github.com/cosen1024/community.
+在上面有所改动和修改。
 
 Working on it.
 

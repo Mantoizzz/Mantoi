@@ -3,7 +3,9 @@ package com.forum.mantoi.sys.services;
 import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.repository.PostRepository;
+import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -11,11 +13,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+/**
+ * 帖子Service
+ */
 @Service
 @Transactional
 @Slf4j
@@ -27,6 +34,8 @@ public class PostService implements PublishService<Post> {
     private final RedisTemplate<String, Object> redisTemplate;
 
     private final Cache<String, Object> caffeineCache;
+
+    private final LikeService likeService;
 
     @Override
     public Post publish(User author, Object request) {
@@ -40,6 +49,8 @@ public class PostService implements PublishService<Post> {
                 .likes(0)
                 .build();
         postRepository.save(post);
+        String redisKey = RedisKeys.getPostScoreSet();
+        redisTemplate.opsForSet().add(redisKey, post.getId());
         return post;
     }
 
@@ -54,8 +65,12 @@ public class PostService implements PublishService<Post> {
         return null;
     }
 
+    public List<Post> getTopPosts() {
+        return postRepository.findTop25ByOrderByScoreDesc();
+    }
+
     public void addLike(User user, Post post) {
-        //TODO 使用Redis对点赞数进行存储
+        likeService.addLike(user.getId(), post.getId(), Entity.POST);
     }
 
     public Page<Post> findAll(Pageable pageable) {
@@ -66,7 +81,7 @@ public class PostService implements PublishService<Post> {
         return postRepository.findById(postId);
     }
 
-    public int updateScore(Long postId, double score) {
-        return postRepository.updatePostScore(postId, score);
+    public void updateScore(Long postId, double score) {
+        postRepository.updatePostScore(postId, score);
     }
 }

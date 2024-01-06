@@ -16,6 +16,8 @@ public class CommentService implements PublishService<Comment> {
 
     private final CommentRepository commentRepository;
 
+    private final SensitiveWordService sensitiveWordService;
+
     @Override
     public Comment publish(User author, Object request) {
         CommentRequest commentRequest = (CommentRequest) request;

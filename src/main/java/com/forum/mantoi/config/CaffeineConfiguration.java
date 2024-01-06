@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
  * Caffeine Configuration
  */
 @Configuration
-public class LocalCacheConfiguration {
+public class CaffeineConfiguration {
 
     private final int EXPIRE_TIME = 10;
 
@@ -19,7 +19,7 @@ public class LocalCacheConfiguration {
 
     private final int MAXIMUM_SIZE = 500;
 
-    @Bean(name = "localCacheManager")
+    @Bean(name = "caffeineCacheManager")
     public Cache<String, Object> localCacheManager() {
         return Caffeine.newBuilder()
                 .expireAfterWrite(EXPIRE_TIME, TimeUnit.MINUTES)

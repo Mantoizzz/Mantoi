@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  */
 @AllArgsConstructor
 @Slf4j
-public class ScoreSchedule implements Job {
+public class ScoreRefresh implements Job {
 
     private static final int PEAK_TIME = 72;
 
@@ -92,8 +92,7 @@ public class ScoreSchedule implements Job {
     private long getTimeDuration(Instant publish) {
         Instant now = Instant.now();
         Duration duration = Duration.between(publish, now);
-        long hours = duration.toHours();
-        return hours;
+        return duration.toHours();
     }
 
     /**

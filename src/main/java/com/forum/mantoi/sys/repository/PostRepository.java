@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -21,4 +22,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("update Post p set p.score=:score where p.id=:id")
     int updatePostScore(@Param("id") Long id, @Param("score") double score);
 
+    List<Post> findTop25ByOrderByScoreDesc();
 }

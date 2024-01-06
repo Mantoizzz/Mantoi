@@ -17,6 +17,5 @@ public interface PublishService<T> {
 
     void delete(Long id);
 
-    T modify(User author, T object, Object request);
 
 }

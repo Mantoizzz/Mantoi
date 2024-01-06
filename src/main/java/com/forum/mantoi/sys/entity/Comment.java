@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Data
@@ -33,11 +34,26 @@ public class Comment {
     @JoinTable(name = "t_post_com", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
     private Post post;
 
-    @ManyToMany(targetEntity = Comment.class)
+    @OneToMany(targetEntity = Comment.class)
     @JoinTable(name = "t_com_com", joinColumns = {@JoinColumn(name = "cid1")}, inverseJoinColumns = {@JoinColumn(name = "cid2")})
     private List<Comment> comments;
+
+    @Column(name = "parent")
+    private long parent;
 
     @Column(name = "publish")
     private Date publishTime;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

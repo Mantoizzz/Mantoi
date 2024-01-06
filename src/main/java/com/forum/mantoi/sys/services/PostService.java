@@ -1,6 +1,5 @@
 package com.forum.mantoi.sys.services;
 
-import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.model.Entity;
@@ -15,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,10 +48,6 @@ public class PostService implements PublishService<Post> {
         postRepository.delete(deletePost);
     }
 
-    @Override
-    public Post modify(User author, Post object, Object request) {
-        return null;
-    }
 
     public List<Post> getTopPosts() {
         return postRepository.findTop25ByOrderByScoreDesc();
@@ -73,5 +67,9 @@ public class PostService implements PublishService<Post> {
 
     public void updateScore(Long postId, double score) {
         postRepository.updatePostScore(postId, score);
+    }
+
+    public void save(Post post) {
+        postRepository.save(post);
     }
 }

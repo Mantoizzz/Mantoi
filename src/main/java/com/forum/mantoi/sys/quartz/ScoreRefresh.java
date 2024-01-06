@@ -45,7 +45,7 @@ public class ScoreRefresh implements Job {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+    public void execute(JobExecutionContext jobExecutionContext) {
         String redisKey = RedisKeys.getPostScoreSet();
         BoundSetOperations<String, Object> operations = redisTemplate.boundSetOps(redisKey);
         if (operations.size() == 0) {
@@ -74,7 +74,7 @@ public class ScoreRefresh implements Job {
                 (Supplier<Throwable>) () -> new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "Post does not exist")
         );
         long likeCount = likeService.viewLikes(Entity.POST, postId);
-        int commentCount = post.getCommentPosts().size();
+        int commentCount = post.getComments().size();
         Instant publishTime = post.getPublishTime().toInstant();
         long hours = getTimeDuration(publishTime);
         double score = calculateScore(likeCount, commentCount, hours);

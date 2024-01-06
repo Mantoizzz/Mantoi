@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,7 +44,7 @@ public class PostService implements PublishService<Post> {
                 .title(postRequest.getTitle())
                 .content(postRequest.getContent())
                 .publishTime(postRequest.getPublishTime())
-                .commentPosts(new ArrayList<>())
+                .comments(new ArrayList<>())
                 .likes(0)
                 .build();
         postRepository.save(post);

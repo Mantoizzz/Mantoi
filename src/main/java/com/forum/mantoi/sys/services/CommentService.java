@@ -2,9 +2,9 @@ package com.forum.mantoi.sys.services;
 
 
 import com.forum.mantoi.common.payload.CommentPostRequest;
-import com.forum.mantoi.sys.entity.CommentPost;
+import com.forum.mantoi.sys.entity.Comment;
 import com.forum.mantoi.sys.entity.User;
-import com.forum.mantoi.sys.repository.CommentPostRepository;
+import com.forum.mantoi.sys.repository.CommentRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,15 +13,15 @@ import java.util.Date;
 
 @Service
 @AllArgsConstructor
-public class CommentPostService implements PublishService<CommentPost> {
+public class CommentService implements PublishService<Comment> {
 
-    private final CommentPostRepository commentPostRepository;
+    private final CommentRepository commentRepository;
 
 
     @Override
-    public CommentPost publish(User author, Object request) {
+    public Comment publish(User author, Object request) {
         CommentPostRequest commentPostRequest = (CommentPostRequest) request;
-        CommentPost commentPost = CommentPost.builder()
+        Comment comment = Comment.builder()
                 .author(author)
                 .publishTime(new Date())
                 .likes(0)
@@ -29,18 +29,18 @@ public class CommentPostService implements PublishService<CommentPost> {
                 .content(commentPostRequest.getContent())
                 .post(commentPostRequest.getPost())
                 .build();
-        commentPostRepository.save(commentPost);
-        return commentPost;
+        commentRepository.save(comment);
+        return comment;
     }
 
     @Override
     public void delete(Long id) {
-        CommentPost commentPost = commentPostRepository.findById(id).orElseThrow();
-        commentPostRepository.delete(commentPost);
+        Comment comment = commentRepository.findById(id).orElseThrow();
+        commentRepository.delete(comment);
     }
 
     @Override
-    public CommentPost modify(User author, CommentPost object, Object request) {
+    public Comment modify(User author, Comment object, Object request) {
         return null;
     }
 }

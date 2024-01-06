@@ -3,7 +3,7 @@ package com.forum.mantoi;
 import com.forum.mantoi.common.payload.PostRequest;
 import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.model.Role;
-import com.forum.mantoi.sys.repository.CommentPostRepository;
+import com.forum.mantoi.sys.repository.CommentRepository;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.sys.repository.UserRepository;
 import com.forum.mantoi.sys.services.PostService;
@@ -24,7 +24,7 @@ class MantoiApplicationTests {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private CommentPostRepository commentPostRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
     private UserRepository userRepository;

@@ -31,9 +31,9 @@ public class Post {
     @JoinTable(name = "t_user_post", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
     private User author;
 
-    @OneToMany(targetEntity = CommentPost.class)
-    @JoinTable(name = "t_post_compost", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "cpid")})
-    private List<CommentPost> commentPosts;
+    @OneToMany(targetEntity = Comment.class)
+    @JoinTable(name = "t_post_com", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "cpid")})
+    private List<Comment> comments;
 
     @Column(name = "likes")
     private Integer likes;

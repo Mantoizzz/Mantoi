@@ -12,8 +12,8 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 
-@Table(name = "t_commentpost")
-public class CommentPost {
+@Table(name = "t_comment")
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,17 +23,21 @@ public class CommentPost {
     private String content;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinTable(name = "t_user_compost", joinColumns = {@JoinColumn(name = "cpid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
+    @JoinTable(name = "t_user_com", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "uid")})
     private User author;
 
     @Column(name = "likes")
     private Integer likes;
 
     @ManyToOne(targetEntity = Post.class)
-    @JoinTable(name = "t_post_compost", joinColumns = {@JoinColumn(name = "cpid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
+    @JoinTable(name = "t_post_com", joinColumns = {@JoinColumn(name = "cid")}, inverseJoinColumns = {@JoinColumn(name = "pid")})
     private Post post;
 
+    @ManyToMany(targetEntity = Comment.class)
+    @JoinTable(name = "t_com_com", joinColumns = {@JoinColumn(name = "cid1")}, inverseJoinColumns = {@JoinColumn(name = "cid2")})
+    private List<Comment> comments;
 
     @Column(name = "publish")
     private Date publishTime;
+
 }

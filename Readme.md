@@ -24,5 +24,5 @@ Working on it.
 * 搞点分布式
 * 使用消息队列对事件进行处理，并进行封装
 * 自定义帖子热度标准，用Redis进行缓存，并定期刷新✅
-* 使用分布式Redis缓存和Caffeine实现多级缓存，避免缓存三兄弟
+* 使用分布式Redis缓存和Caffeine实现多级缓存，避免缓存三兄弟✅
 * 重构实体类的Repository，放弃使用SpringData JPA

@@ -32,7 +32,7 @@ public class Post {
     private User author;
 
     @OneToMany(targetEntity = Comment.class)
-    @JoinTable(name = "t_post_com", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "cpid")})
+    @JoinTable(name = "t_post_com", joinColumns = {@JoinColumn(name = "pid")}, inverseJoinColumns = {@JoinColumn(name = "cid")})
     private List<Comment> comments;
 
     @Column(name = "likes")

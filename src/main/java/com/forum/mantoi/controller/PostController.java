@@ -18,6 +18,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 @AllArgsConstructor
 @Controller
 @RequestMapping("/post")
@@ -73,7 +76,15 @@ public class PostController {
         if (user == null) {
             throw new UserException(CommonResultStatus.UNAUTHORIZED, "请登录后再使用该功能");
         }
-        postService.publish(user, postRequest);
+        Post post = Post.builder()
+                .author(user)
+                .title(postRequest.getTitle())
+                .content(postRequest.getContent())
+                .publishTime(new Date())
+                .comments(new ArrayList<>())
+                .likes(0)
+                .build();
+        postService.publish(post);
         return CommunityUtil.getJsonString(CommonResultStatus.OK);
     }
 

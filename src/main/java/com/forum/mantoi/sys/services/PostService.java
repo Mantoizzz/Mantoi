@@ -37,20 +37,11 @@ public class PostService implements PublishService<Post> {
     private final LikeService likeService;
 
     @Override
-    public Post publish(User author, Object request) {
-        PostRequest postRequest = (PostRequest) request;
-        Post post = Post.builder()
-                .author(author)
-                .title(postRequest.getTitle())
-                .content(postRequest.getContent())
-                .publishTime(postRequest.getPublishTime())
-                .comments(new ArrayList<>())
-                .likes(0)
-                .build();
-        postRepository.save(post);
+    public Post publish(Post object) {
+        postRepository.save(object);
         String redisKey = RedisKeys.getPostScoreSet();
-        redisTemplate.opsForSet().add(redisKey, post.getId());
-        return post;
+        redisTemplate.opsForSet().add(redisKey, object.getId());
+        return object;
     }
 
     @Override

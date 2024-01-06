@@ -5,14 +5,14 @@ import org.springframework.stereotype.Service;
 
 /**
  * 实体类接口
- * 针对用户、帖子、评论、跟帖
+ * 针对用户、帖子、评论
  *
  * @param <T>
  */
 @Service
 public interface PublishService<T> {
 
-    T publish(User author, Object request);
+    T publish(T object);
 
 
     void delete(Long id);

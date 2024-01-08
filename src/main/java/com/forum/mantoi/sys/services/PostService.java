@@ -1,11 +1,14 @@
 package com.forum.mantoi.sys.services;
 
+import com.forum.mantoi.common.CommonResultStatus;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +33,23 @@ public class PostService implements PublishService<Post> {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private final Cache<String, Object> caffeineCache;
-
     private final LikeService likeService;
+
+    private final SensitiveWordService sensitiveWordService;
+
+
+    @PostConstruct
+    public void init() {
+
+    }
 
     @Override
     public Post publish(Post object) {
+        if (object == null) {
+            throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "post does not exist");
+        }
+        object.setTitle(sensitiveWordService.replace(object.getTitle()));
+        object.setContent(sensitiveWordService.replace(object.getContent()));
         postRepository.save(object);
         String redisKey = RedisKeys.getPostScoreSet();
         redisTemplate.opsForSet().add(redisKey, object.getId());

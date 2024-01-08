@@ -2,9 +2,13 @@ package com.forum.mantoi.controller;
 
 import com.forum.mantoi.common.CommonResultStatus;
 import com.forum.mantoi.common.payload.PostRequest;
+import com.forum.mantoi.sys.entity.Comment;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.exception.UserException;
+import com.forum.mantoi.sys.model.Entity;
+import com.forum.mantoi.sys.services.CommentService;
 import com.forum.mantoi.sys.services.LikeService;
 import com.forum.mantoi.sys.services.PostService;
 import com.forum.mantoi.sys.services.UserService;
@@ -16,10 +20,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 @AllArgsConstructor
 @Controller
@@ -30,7 +34,9 @@ public class PostController {
 
     private final LikeService likeService;
 
-    private final UserService userService;
+    private final CommentService commentService;
+
+    private final int PAGE_SIZE = 10;
 
     /*
     当前登录的用户
@@ -71,6 +77,7 @@ public class PostController {
     }
 
     @PostMapping("/add")
+    @ResponseBody
     public String addPost(@ModelAttribute(name = "postRequest") PostRequest postRequest) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (user == null) {
@@ -88,17 +95,80 @@ public class PostController {
         return CommunityUtil.getJsonString(CommonResultStatus.OK);
     }
 
-//    @RequestMapping(path = "/detail/{postId}", method = RequestMethod.GET)
-//    public String getPost(@PathVariable("postId") long postId, Model model, Pageable pageable) {
-//
-//        Post post = postService.findById(postId)
-//                .orElseThrow(() -> new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "post does not exist"));
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        User curUser = authentication == null ? null : (User) authentication.getPrincipal();
-//
-//        User author = post.getAuthor();
-//        long likeCount = likeService.viewLikes(Entity.POST, postId);
-//        boolean isLiked = curUser != null && likeService.isLiked(Entity.POST, postId, curUser.getId());
-//        List<CommentPost> commentPosts = post.getCommentPosts();
-//    }
+    /**
+     * 访问论坛的处理方法
+     *
+     * @param postId  postId
+     * @param model   model
+     * @param curPage 目前的page数
+     * @return URL
+     */
+    @RequestMapping(path = "/detail/{postId}/{page}", method = RequestMethod.GET)
+    public String getPost(@PathVariable("postId") long postId, Model model, @PathVariable("page") int curPage) {
+
+        Post post = postService.findById(postId)
+                .orElseThrow(() -> new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "post does not exist"));
+        model.addAttribute("post", post);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User curUser = authentication == null ? null : (User) authentication.getPrincipal();
+        model.addAttribute("user", curUser);
+        User author = post.getAuthor();
+        model.addAttribute("author", author);
+        long likeCount = likeService.viewLikes(Entity.POST, postId);
+        model.addAttribute("likes", likeCount);
+        boolean isLiked = curUser != null && likeService.isLiked(Entity.POST, postId, curUser.getId());
+        model.addAttribute("isLiked", isLiked);
+        List<Comment> comments = commentService.findCommentsById(Entity.POST, postId);
+        int start = Math.max(0, curPage * PAGE_SIZE);
+        int end = Math.min(start + PAGE_SIZE, comments.size());
+        comments = comments.subList(start, end);
+
+        List<Map<String, Object>> commentVOList = new ArrayList<>();
+        if (!comments.isEmpty()) {
+            for (Comment comment : comments) {
+                Map<String, Object> map = new HashMap<>();
+                map.put("comment", comment);
+                map.put("author", comment.getAuthor());
+                map.put("likes", comment.getLikes());
+                boolean commentLiked = curUser != null && likeService.isLiked(Entity.COMMENT, comment.getId(), curUser.getId());
+                map.put("isLiked", commentLiked);
+                List<Comment> replyList = commentService.findCommentsById(Entity.COMMENT, comment.getId());
+                List<Map<String, Object>> replyVOList = new ArrayList<>();
+                if (!replyList.isEmpty()) {
+                    for (Comment reply : replyList) {
+                        Map<String, Object> vo = new HashMap<>();
+                        vo.put("reply", reply);
+                        vo.put("replyAuthor", reply.getAuthor());
+                        Comment parentComment = commentService.findParent(reply);
+                        vo.put("parent", parentComment);
+
+                        long likeCnt = likeService.viewLikes(Entity.COMMENT, reply.getId());
+                        vo.put("likeCnt", likeCnt);
+                        boolean likeStatus = curUser != null && likeService.isLiked(Entity.COMMENT, reply.getId(), curUser.getId());
+                        vo.put("likeStatus", likeStatus);
+
+                        replyVOList.add(vo);
+                    }
+                }
+                map.put("reply", replyVOList);
+
+                int replyCount = comments.size();
+                map.put("replyCount", replyCount);
+                commentVOList.add(map);
+            }
+        }
+        model.addAttribute("comments", commentVOList);
+        return "/post/{postId}/detail";
+    }
+
+    @RequestMapping(path = "/delete", method = RequestMethod.POST)
+    @ResponseBody
+    public String setDelete(long id) {
+        postService.delete(id);
+
+        //TODO:触发事件
+        return CommonResultStatus.OK.toString();
+    }
+
+
 }

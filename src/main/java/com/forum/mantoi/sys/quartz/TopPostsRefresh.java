@@ -3,6 +3,7 @@ package com.forum.mantoi.sys.quartz;
 import com.alibaba.fastjson.JSON;
 import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.services.PostService;
+import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +31,7 @@ public class TopPostsRefresh implements Job {
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         log.info("Quartz:TopPostsRefresh Begin...");
         List<Post> topList = postService.getTopPosts();
-        String key = "topList";
+        String key = RedisKeys.getTopPosts();
         try {
             cache.put(key, topList);
             String jsonList = JSON.toJSONString(topList);

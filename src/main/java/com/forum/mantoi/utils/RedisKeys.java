@@ -19,6 +19,8 @@ public class RedisKeys {
 
     private static final String POST_SCORE_SET = "post:score";
 
+    private static final String TOP_POSTS = "topList";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -37,6 +39,10 @@ public class RedisKeys {
 
     public static String getPostScoreSet() {
         return POST_SCORE_SET;
+    }
+
+    public static String getTopPosts() {
+        return TOP_POSTS;
     }
 
 }

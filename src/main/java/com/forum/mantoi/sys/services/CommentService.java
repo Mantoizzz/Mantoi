@@ -4,7 +4,6 @@ package com.forum.mantoi.sys.services;
 import com.forum.mantoi.common.CommonResultStatus;
 import com.forum.mantoi.sys.entity.Comment;
 import com.forum.mantoi.sys.entity.Post;
-import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.repository.CommentRepository;

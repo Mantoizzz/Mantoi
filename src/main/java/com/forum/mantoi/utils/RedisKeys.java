@@ -21,6 +21,8 @@ public class RedisKeys {
 
     private static final String TOP_POSTS = "topList";
 
+    private static final String ALL_POSTS = "posts";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -43,6 +45,10 @@ public class RedisKeys {
 
     public static String getTopPosts() {
         return TOP_POSTS;
+    }
+
+    public static String getAllPosts() {
+        return ALL_POSTS;
     }
 
 }

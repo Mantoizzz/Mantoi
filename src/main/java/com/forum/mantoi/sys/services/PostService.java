@@ -8,10 +8,16 @@ import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.CacheLoader;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import com.github.benmanes.caffeine.cache.LoadingCache;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 帖子Service
@@ -37,11 +44,7 @@ public class PostService implements PublishService<Post> {
 
     private final SensitiveWordService sensitiveWordService;
 
-
-    @PostConstruct
-    public void init() {
-
-    }
+    private final Cache<String, Object> caffeineCache;
 
     @Override
     public Post publish(Post object) {
@@ -65,6 +68,10 @@ public class PostService implements PublishService<Post> {
 
     public List<Post> getTopPosts() {
         return postRepository.findTop25ByOrderByScoreDesc();
+    }
+
+    public List<Post> findTopPosts() {
+        return (List<Post>) caffeineCache.asMap().get(RedisKeys.getTopPosts());
     }
 
     public void addLike(User user, Post post) {

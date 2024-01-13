@@ -75,7 +75,7 @@ public class FollowService {
      * @param entity entity
      * @return Count
      */
-    public long findSubscribersCount(long userId, Entity entity) {
+    public long findSubscribersCount(Entity entity, long userId) {
         String subscribersKey = RedisKeys.getSubscribersKey(userId, entity);
         return redisTemplate.opsForZSet().zCard(subscribersKey);
     }

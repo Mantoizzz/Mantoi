@@ -29,6 +29,6 @@ public class UserController {
         model.addAttribute("followers", followers);
         int subscribers = user.getSubscribers().size();
         model.addAttribute("subscribers", subscribers);
-
+        return null;
     }
 }

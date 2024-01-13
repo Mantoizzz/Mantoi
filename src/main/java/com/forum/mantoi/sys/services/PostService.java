@@ -24,6 +24,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +66,6 @@ public class PostService implements PublishService<Post> {
         postRepository.delete(deletePost);
     }
 
-
     public List<Post> getTopPosts() {
         return postRepository.findTop25ByOrderByScoreDesc();
     }
@@ -74,15 +74,18 @@ public class PostService implements PublishService<Post> {
         return (List<Post>) caffeineCache.asMap().get(RedisKeys.getTopPosts());
     }
 
-    public void addLike(User user, Post post) {
-        likeService.addLike(user.getId(), post.getId(), Entity.POST);
-    }
-
     public Page<Post> findAll(Pageable pageable) {
         return postRepository.findAll(pageable);
     }
 
     public Optional<Post> findById(Long postId) {
+        //先查询缓存
+        List<Post> topList = findTopPosts();
+        for (Post post : topList) {
+            if (Objects.equals(post.getId(), postId)) {
+                return Optional.of(post);
+            }
+        }
         return postRepository.findById(postId);
     }
 

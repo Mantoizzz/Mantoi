@@ -31,6 +31,7 @@ public class UserService {
      * @param target 对方
      */
     @Transactional
+    @Deprecated
     public void subscribe(User user, User target) {
         user.getSubscribers().add(target);
         target.getFollowers().add(user);
@@ -45,6 +46,7 @@ public class UserService {
      * @param targetId 对方id
      * @param sub      true->关注;false->取关
      */
+    @Deprecated
     public void processSubscribe(Long userId, Long targetId, boolean sub) {
         Optional<User> optional = userRepository.findById(userId);
         User user;
@@ -73,6 +75,7 @@ public class UserService {
      * @param user   我
      * @param target 要取消的人
      */
+    @Deprecated
     @Transactional
     public void unSubscribe(User user, User target) {
         user.getSubscribers().remove(target);

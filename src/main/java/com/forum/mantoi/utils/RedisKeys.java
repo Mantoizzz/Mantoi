@@ -23,6 +23,10 @@ public class RedisKeys {
 
     private static final String ALL_POSTS = "posts";
 
+    private static final String SUBSCRIBERS_PREFIX = "subscribers:";
+
+    private static final String FOLLOWER_PREFIX = "followers:";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -50,5 +54,14 @@ public class RedisKeys {
     public static String getAllPosts() {
         return ALL_POSTS;
     }
+
+    public static String getSubscribersKey(long userId, Entity entity) {
+        return SUBSCRIBERS_PREFIX + entity.toString() + SPLIT + userId;
+    }
+
+    public static String getFollowerKey(Entity entity, long id) {
+        return FOLLOWER_PREFIX + entity.toString() + SPLIT + id;
+    }
+
 
 }

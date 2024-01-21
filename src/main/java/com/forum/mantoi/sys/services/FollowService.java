@@ -4,6 +4,7 @@ import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.utils.RedisKeys;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,7 +31,7 @@ public class FollowService {
     public void follow(long userId, Entity entity, long entityId) {
         redisTemplate.execute(new SessionCallback<>() {
             @Override
-            public Object execute(RedisOperations operations) throws DataAccessException {
+            public Object execute(@NonNull RedisOperations operations) throws DataAccessException {
                 String subscribeKey = RedisKeys.getSubscribersKey(userId, entity);
                 String followerKey = RedisKeys.getFollowerKey(entity, entityId);
 
@@ -54,7 +55,7 @@ public class FollowService {
     public void unfollow(long userId, Entity entity, long entityId) {
         redisTemplate.execute(new SessionCallback<>() {
             @Override
-            public Object execute(RedisOperations operations) throws DataAccessException {
+            public Object execute(@NonNull RedisOperations operations) throws DataAccessException {
                 String subscribeKey = RedisKeys.getSubscribersKey(userId, entity);
                 String followerKey = RedisKeys.getFollowerKey(entity, entityId);
 

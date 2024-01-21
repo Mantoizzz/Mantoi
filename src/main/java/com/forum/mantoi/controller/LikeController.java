@@ -27,7 +27,7 @@ public class LikeController {
     @ResponseBody
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     public String like(Entity entity, long id, long userId) {
-        User curUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         likeService.addLike(userId, id, entity);
         long likeCount = likeService.viewLikes(entity, id);
         boolean isLiked = likeService.isLiked(entity, id, userId);

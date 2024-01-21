@@ -5,7 +5,6 @@ import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.services.LikeService;
 import com.forum.mantoi.sys.services.PostService;
-import com.github.benmanes.caffeine.cache.Cache;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

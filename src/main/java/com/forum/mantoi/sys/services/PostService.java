@@ -2,22 +2,13 @@ package com.forum.mantoi.sys.services;
 
 import com.forum.mantoi.common.CommonResultStatus;
 import com.forum.mantoi.sys.entity.Post;
-import com.forum.mantoi.sys.entity.User;
 import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.sys.model.Entity;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.CacheLoader;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import com.github.benmanes.caffeine.cache.LoadingCache;
-import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -26,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 帖子Service
@@ -40,8 +30,6 @@ public class PostService implements PublishService<Post> {
     private final PostRepository postRepository;
 
     private final RedisTemplate<String, Object> redisTemplate;
-
-    private final LikeService likeService;
 
     private final SensitiveWordService sensitiveWordService;
 
@@ -63,7 +51,10 @@ public class PostService implements PublishService<Post> {
     @Override
     public void delete(Long id) {
         Post deletePost = postRepository.findPostById(id).orElseThrow();
-        postRepository.delete(deletePost);
+        List<Post> topPosts = findTopPosts();
+        if (topPosts.contains(deletePost)) {
+
+        }
     }
 
     public List<Post> getTopPosts() {

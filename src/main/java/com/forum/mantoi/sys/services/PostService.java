@@ -5,6 +5,7 @@ import com.forum.mantoi.sys.entity.Post;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.repository.PostRepository;
 import com.forum.mantoi.utils.RedisKeys;
+import com.forum.mantoi.utils.SearchTextUtils;
 import com.github.benmanes.caffeine.cache.Cache;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -14,12 +15,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * 帖子Service
+ *
+ * @author DELL
  */
 @Service
 @Transactional
@@ -52,9 +56,12 @@ public class PostService implements PublishService<Post> {
     public void delete(Long id) {
         Post deletePost = postRepository.findPostById(id).orElseThrow();
         List<Post> topPosts = findTopPosts();
-        if (topPosts.contains(deletePost)) {
+    }
 
-        }
+    public void tokenization(Post post) throws IOException {
+        List<String> list = SearchTextUtils.tokenizationPost(post);
+        Long postId = post.getId();
+
     }
 
     public List<Post> getTopPosts() {

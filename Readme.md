@@ -1,5 +1,5 @@
 # Mantoi
-# 本项目只是学习用的DEMO.
+# 本人正在重新重构该项目
 一个基于SpringBoot3+SpringSecurity6+SpringData JPA+Redis+ElasticSearch的仿牛客网求职就业论坛
 
 

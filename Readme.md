@@ -1,5 +1,5 @@
 # Mantoi
-# 本人正在重新重构该项目
+# 重构已经完成，舍弃了SpringDataJpa,采用Mybatis-Plus，同时采用更加方便的前后端分离架构(因为我不用写前端逻辑)
 一个基于SpringBoot3+SpringSecurity6+SpringData JPA+Redis+ElasticSearch的仿牛客网求职就业论坛
 
 正在设想的新功能：

@@ -1,6 +1,5 @@
 package com.forum.mantoi.sys.handler;
 
-import com.forum.mantoi.common.Constants;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +15,9 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author DELL
+ */
 @Component
 @Slf4j
 @AllArgsConstructor
@@ -30,8 +32,8 @@ public class MyLogoutHandler implements LogoutHandler {
         String token = jwtUtilities.getToken(request);
         String username = authentication.getName();
         //由于token不多，所以采用为每个黑名单键设置一个key的策略
-        int BLACK_TOKEN_EXPIRATION = 7;
-        redisTemplate.opsForValue().set(RedisKeys.getBlackListTokenKey(username), token, BLACK_TOKEN_EXPIRATION, TimeUnit.DAYS);
+        int expiration = 7;
+        redisTemplate.opsForValue().set(RedisKeys.getBlackListTokenKey(username), token, expiration, TimeUnit.DAYS);
         SecurityContextHolder.clearContext();
         try {
             response.sendRedirect("/homePage");

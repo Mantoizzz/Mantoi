@@ -1,11 +1,11 @@
 package com.forum.mantoi.sys.filter;
 
-import com.forum.mantoi.common.CommonResultStatus;
-import com.forum.mantoi.common.Constants;
-import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.common.response.CommonResultStatus;
+import com.forum.mantoi.common.constant.Constants;
+import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.JwtUser;
-import com.forum.mantoi.sys.repository.UserRepository;
+import com.forum.mantoi.sys.dao.repository.UserRepository;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.FilterChain;
@@ -25,6 +25,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * @author DELL
+ */
 @Slf4j
 @Component
 @AllArgsConstructor

@@ -1,57 +1,31 @@
 package com.forum.mantoi.controller;
 
-
-import com.forum.mantoi.common.payload.RegisterRequest;
-import com.forum.mantoi.sys.repository.UserRepository;
-import com.forum.mantoi.sys.services.UserService;
+import com.forum.mantoi.common.constant.ApiRouteConstants;
+import com.forum.mantoi.common.pojo.request.RegisterRequestDto;
+import com.forum.mantoi.common.pojo.response.RegisterResponseDto;
+import com.forum.mantoi.common.response.RestResponse;
+import com.forum.mantoi.sys.services.impl.UserServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
-@Controller
-@RequestMapping("/auth")
+/**
+ * @author DELL
+ */
+@RestController
 @AllArgsConstructor
-public class AuthController {
+public class AuthController implements ApiRouteConstants {
 
-    private final UserRepository userRepository;
+    private final UserServiceImpl userServiceImpl;
 
-    private final PasswordEncoder passwordEncoder;
-
-    private final UserService userService;
-
-    @GetMapping("/register")
-    public String registerGet(Model model) {
-        model.addAttribute("user", new RegisterRequest());
-        return "register";
+    @PostMapping(API_AUTH_PREFIX + API_REGISTER)
+    @ResponseBody
+    public RestResponse<RegisterResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
+        return userServiceImpl.register(registerRequestDto);
     }
 
-    @GetMapping("/login")
-    public String loginGet() {
-        return "login";
-    }
-
-
-    @PostMapping("/register")
-    public String register(@ModelAttribute(name = "user") RegisterRequest registerRequest, Model model) {
-        Map<String, Object> map = userService.register(registerRequest);
-        if (map == null || map.isEmpty()) {
-            model.addAttribute("msg", "注册成功");
-            model.addAttribute("next", "/login");
-            //TODO:返回操作结果,以及完成operationHTML
-            return "/operation";
-        } else {
-            model.addAttribute("usernameField", map.get("usernameField"));
-            model.addAttribute("passwordField", map.get("passwordField"));
-            model.addAttribute("emailField", map.get("emailField"));
-            return "/register";
-        }
-    }
 
 }

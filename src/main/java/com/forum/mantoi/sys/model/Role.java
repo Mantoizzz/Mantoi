@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * @author DELL
+ */
+
 @Getter
 @RequiredArgsConstructor
 public enum Role {

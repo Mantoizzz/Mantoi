@@ -1,9 +1,11 @@
 package com.forum.mantoi.utils;
 
-import com.forum.mantoi.sys.model.Entity;
+import com.forum.mantoi.common.constant.Entity;
 
 /**
  * 用于给存入redis的key取名的
+ *
+ * @author DELL
  */
 public class RedisKeys {
 
@@ -55,10 +57,24 @@ public class RedisKeys {
         return ALL_POSTS;
     }
 
+    /**
+     * 用户关注实体表的Key
+     *
+     * @param userId user
+     * @param entity 实体的种类
+     * @return Key
+     */
     public static String getSubscribersKey(long userId, Entity entity) {
         return SUBSCRIBERS_PREFIX + entity.toString() + SPLIT + userId;
     }
 
+    /**
+     * 某个实体的粉丝表的key
+     *
+     * @param entity entity
+     * @param id     id
+     * @return Key
+     */
     public static String getFollowerKey(Entity entity, long id) {
         return FOLLOWER_PREFIX + entity.toString() + SPLIT + id;
     }

@@ -1,7 +1,7 @@
 package com.forum.mantoi.utils;
 
 
-import com.forum.mantoi.common.Constants;
+import com.forum.mantoi.common.constant.Constants;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +17,9 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
+/**
+ * @author DELL
+ */
 @Slf4j
 @Component
 public class JwtUtilities {

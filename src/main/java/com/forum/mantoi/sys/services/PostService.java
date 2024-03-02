@@ -1,97 +1,36 @@
 package com.forum.mantoi.sys.services;
 
-import com.forum.mantoi.common.CommonResultStatus;
-import com.forum.mantoi.sys.entity.Post;
-import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.sys.repository.PostRepository;
-import com.forum.mantoi.utils.RedisKeys;
-import com.forum.mantoi.utils.SearchTextUtils;
-import com.github.benmanes.caffeine.cache.Cache;
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import com.forum.mantoi.common.pojo.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.request.PublishPostDto;
+import com.forum.mantoi.common.response.RestResponse;
+import com.forum.mantoi.sys.dao.entity.Comment;
+import com.forum.mantoi.sys.dao.entity.Post;
+import com.forum.mantoi.sys.dao.entity.PostContent;
+import com.forum.mantoi.sys.dao.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
- * 帖子Service
- *
  * @author DELL
  */
-@Service
-@Transactional
-@Slf4j
-@AllArgsConstructor
-public class PostService implements PublishService<Post> {
+public interface PostService {
 
-    private final PostRepository postRepository;
+    public RestResponse<Void> publish(PublishPostDto dto);
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    public RestResponse<Void> delete(DeletePostDto dto);
 
-    private final SensitiveWordService sensitiveWordService;
+    public Post findById(Long id);
 
-    private final Cache<String, Object> caffeineCache;
+    public List<Post> getTopPosts();
 
-    @Override
-    public Post publish(Post object) {
-        if (object == null) {
-            throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "post does not exist");
-        }
-        object.setTitle(sensitiveWordService.replace(object.getTitle()));
-        object.setContent(sensitiveWordService.replace(object.getContent()));
-        postRepository.save(object);
-        String redisKey = RedisKeys.getPostScoreSet();
-        redisTemplate.opsForSet().add(redisKey, object.getId());
-        return object;
-    }
+    public Page<Post> findAll(Pageable pageable);
 
-    @Override
-    public void delete(Long id) {
-        Post deletePost = postRepository.findPostById(id).orElseThrow();
-        List<Post> topPosts = findTopPosts();
-    }
+    public void updateScore(Long postId, double score);
 
-    public void tokenization(Post post) throws IOException {
-        List<String> list = SearchTextUtils.tokenizationPost(post);
-        Long postId = post.getId();
+    public User getAuthor(Post post);
 
-    }
+    public List<Comment> getComments(Post post);
 
-    public List<Post> getTopPosts() {
-        return postRepository.findTop25ByOrderByScoreDesc();
-    }
-
-    public List<Post> findTopPosts() {
-        return (List<Post>) caffeineCache.asMap().get(RedisKeys.getTopPosts());
-    }
-
-    public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
-    }
-
-    public Optional<Post> findById(Long postId) {
-        //先查询缓存
-        List<Post> topList = findTopPosts();
-        for (Post post : topList) {
-            if (Objects.equals(post.getId(), postId)) {
-                return Optional.of(post);
-            }
-        }
-        return postRepository.findById(postId);
-    }
-
-    public void updateScore(Long postId, double score) {
-        postRepository.updatePostScore(postId, score);
-    }
-
-    public void save(Post post) {
-        postRepository.save(post);
-    }
 }

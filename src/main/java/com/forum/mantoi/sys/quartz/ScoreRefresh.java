@@ -1,23 +1,22 @@
 package com.forum.mantoi.sys.quartz;
 
-import com.forum.mantoi.common.CommonResultStatus;
-import com.forum.mantoi.sys.entity.Post;
+import com.forum.mantoi.common.response.CommonResultStatus;
+import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.sys.model.Entity;
-import com.forum.mantoi.sys.services.LikeService;
+import com.forum.mantoi.common.constant.Entity;
+import com.forum.mantoi.sys.services.impl.LikeServiceImpl;
 import com.forum.mantoi.sys.services.PostService;
 import com.forum.mantoi.utils.RedisKeys;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.function.Supplier;
+import java.util.Objects;
 
 /**
  * Quartz定时刷新帖子任务类
@@ -38,9 +37,11 @@ public class ScoreRefresh implements Job {
 
     private static final double COMMENT_WEIGHT = 2.0;
 
+    private final PostServices postServices;
+
     private final PostService postService;
 
-    private final LikeService likeService;
+    private final LikeServiceImpl likeServiceImpl;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -64,21 +65,22 @@ public class ScoreRefresh implements Job {
     }
 
     /**
-     * 刷新帖子方法
+     * 刷新帖子实现
      *
      * @param postId 帖子ID
-     * @throws Throwable BusinessException
      */
-    private void refreshScore(Long postId) throws Throwable {
-        Post post = postService.findById(postId).orElseThrow(
-                (Supplier<Throwable>) () -> new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "Post does not exist")
-        );
-        long likeCount = likeService.viewLikes(Entity.POST, postId);
+    private void refreshScore(Long postId) throws BusinessException {
+        Post post = postService.findById(postId);
+        if (Objects.isNull(post)) {
+            throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "Post not found");
+        }
+
+        long likeCount = likeServiceImpl.viewLikes(Entity.POST, postId);
         int commentCount = post.getComments().size();
         Instant publishTime = post.getPublishTime().toInstant();
         long hours = getTimeDuration(publishTime);
         double score = calculateScore(likeCount, commentCount, hours);
-        postService.updateScore(postId, score);
+        postServices.updateScore(postId, score);
         //TODO 更新elasticsearch的score
 
     }

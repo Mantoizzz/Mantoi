@@ -1,6 +1,6 @@
 package com.forum.mantoi.sys.model;
 
-import com.forum.mantoi.sys.entity.User;
+import com.forum.mantoi.sys.dao.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * @author DELL
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,13 +29,13 @@ public class JwtUser implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    private Boolean isAccountNonExpired = true;
+    private Boolean isAccountNonExpired;
 
-    private Boolean isEnabled = true;
+    private Boolean isEnabled;
 
-    private Boolean isCredentialsNonExpired = true;
+    private Boolean isCredentialsNonExpired;
 
-    private Boolean isAccountNonLocked = true;
+    private Boolean isAccountNonLocked;
 
 
     public JwtUser(User user) {

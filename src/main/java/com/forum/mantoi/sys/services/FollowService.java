@@ -1,7 +1,8 @@
 package com.forum.mantoi.sys.services;
 
-import com.forum.mantoi.sys.entity.User;
-import com.forum.mantoi.sys.model.Entity;
+import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.common.constant.Entity;
+import com.forum.mantoi.sys.services.impl.UserServiceImpl;
 import com.forum.mantoi.utils.RedisKeys;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
@@ -17,7 +18,7 @@ import java.util.*;
 @AllArgsConstructor
 public class FollowService {
 
-    private final UserService userService;
+    private final UserServiceImpl userServiceImpl;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -28,22 +29,22 @@ public class FollowService {
      * @param entity   entity
      * @param entityId id
      */
-    public void follow(long userId, Entity entity, long entityId) {
-        redisTemplate.execute(new SessionCallback<>() {
-            @Override
-            public Object execute(@NonNull RedisOperations operations) throws DataAccessException {
-                String subscribeKey = RedisKeys.getSubscribersKey(userId, entity);
-                String followerKey = RedisKeys.getFollowerKey(entity, entityId);
-
-                operations.multi();
-                operations.opsForZSet().add(subscribeKey, entityId, System.currentTimeMillis());
-                operations.opsForZSet().add(followerKey, userId, System.currentTimeMillis());
-
-                return operations.exec();
-            }
-        });
-
-    }
+//    public void follow(long userId, Entity entity, long entityId) {
+//        redisTemplate.execute(new SessionCallback<>() {
+//            @Override
+//            public Object execute(@NonNull RedisOperations operations) throws DataAccessException {
+//                String subscribeKey = RedisKeys.getSubscribersKey(userId, entity);
+//                String followerKey = RedisKeys.getFollowerKey(entity, entityId);
+//
+//                operations.multi();
+//                operations.opsForZSet().add(subscribeKey, entityId, System.currentTimeMillis());
+//                operations.opsForZSet().add(followerKey, userId, System.currentTimeMillis());
+//
+//                return operations.exec();
+//            }
+//        });
+//
+//    }
 
     /**
      * 对某个实体取消关注
@@ -148,7 +149,7 @@ public class FollowService {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Object obj : targetSet) {
             Map<String, Object> map = new HashMap<>();
-            User user = userService.findUserById((Long) obj);
+            User user = userServiceImpl.findUserById((Long) obj);
             map.put("user", user);
             Double score = redisTemplate.opsForZSet().score(key, obj);
             if (score != null) {

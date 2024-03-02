@@ -1,6 +1,6 @@
 package com.forum.mantoi.controller;
 
-import com.forum.mantoi.common.CommonResultStatus;
+import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.utils.CommunityUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 
 /**
  * 异常处理类
+ * @author DELL
  */
 @ControllerAdvice(annotations = Controller.class)
 @Slf4j

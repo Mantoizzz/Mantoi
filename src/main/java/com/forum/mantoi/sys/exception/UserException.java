@@ -1,6 +1,6 @@
 package com.forum.mantoi.sys.exception;
 
-import com.forum.mantoi.common.ResultStatus;
+import com.forum.mantoi.common.response.ResultStatus;
 
 public class UserException extends BusinessException {
 

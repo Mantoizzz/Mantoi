@@ -1,8 +1,7 @@
 package com.forum.mantoi.sys.quartz;
 
 import com.alibaba.fastjson.JSON;
-import com.forum.mantoi.sys.entity.Post;
-import com.forum.mantoi.sys.services.PostService;
+import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.utils.RedisKeys;
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ import java.util.List;
 @Slf4j
 public class TopPostsRefresh implements Job {
 
-    private final PostService postService;
+    private final PostServices postService;
 
     private final Cache<String, Object> cache;
 

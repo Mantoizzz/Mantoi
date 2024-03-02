@@ -3,6 +3,10 @@ package com.forum.mantoi.sys.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * @author DELL
+ */
+
 @Getter
 @RequiredArgsConstructor
 public enum Permission {

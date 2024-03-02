@@ -1,0 +1,9 @@
+<!--<mapper xmlns="http://mybatis.org/schema/mybatis-mapper">-->
+<!--    <select id="selectCommentsByPostId" resultType="com.forum.mantoi.sys.dao.entity.Comment">-->
+<!--        SELECT * FROM t_comment WHERE post_id = #{postId}-->
+<!--    </select>-->
+
+<!--    <select id="selectRepliesByCommentId" resultType="com.forum.mantoi.sys.dao.entity.Comment">-->
+<!--        SELECT * FROM t_comment WHERE parent_id = #{commentId}-->
+<!--    </select>-->
+<!--</mapper>-->

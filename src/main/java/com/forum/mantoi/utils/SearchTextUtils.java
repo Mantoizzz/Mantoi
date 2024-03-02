@@ -1,6 +1,6 @@
 package com.forum.mantoi.utils;
 
-import com.forum.mantoi.sys.entity.Post;
+import com.forum.mantoi.sys.dao.entity.Post;
 import lombok.experimental.UtilityClass;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;

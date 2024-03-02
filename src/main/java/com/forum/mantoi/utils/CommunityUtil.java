@@ -1,10 +1,13 @@
 package com.forum.mantoi.utils;
 
 import com.alibaba.fastjson.JSONObject;
-import com.forum.mantoi.common.CommonResultStatus;
+import com.forum.mantoi.common.response.CommonResultStatus;
 
 import java.util.Map;
 
+/**
+ * @author DELL
+ */
 public class CommunityUtil {
 
     public static String getJsonString(int code, String msg, Map<String, Object> map) {

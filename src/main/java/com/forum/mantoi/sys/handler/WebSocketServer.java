@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author DELL
+ */
 @Slf4j
 @AllArgsConstructor
 @Component
@@ -27,11 +30,12 @@ public class WebSocketServer {
 
 
     private final StringRedisTemplate stringRedisTemplate;
+
     /*
     Key:User's email
     Value:User's session
      */
-    private static final ConcurrentHashMap<String, Session> sessionMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, Session> SESSION_MAP = new ConcurrentHashMap<>();
 
     /**
      * 用户开启WebSocket
@@ -43,13 +47,13 @@ public class WebSocketServer {
     public void onOpen(Session session, @PathParam(value = "token") String token) {
         String email = jwtUtilities.extractEmail(token);
         session.getUserProperties().put("email", email);
-        sessionMap.put(email, session);
+        SESSION_MAP.put(email, session);
         String redisKey = RedisKeys.getWebsocketListKey(email);
 
         List<String> msgList = stringRedisTemplate.opsForList().range(redisKey, 0, -1);
         if (msgList != null && !msgList.isEmpty()) {
             for (String msg : msgList) {
-                Session target = sessionMap.get(email);
+                Session target = SESSION_MAP.get(email);
                 sendMessage(target, msg);
             }
             stringRedisTemplate.delete(redisKey);
@@ -67,7 +71,7 @@ public class WebSocketServer {
         String email = (String) session.getUserProperties().get("email");
         log.info("Websocket:用户发来消息:{}", email);
         Message message = JSON.parseObject(msg, Message.class);
-        Session target = sessionMap.get(message.getTargetEmail());
+        Session target = SESSION_MAP.get(message.getTargetEmail());
         if (target == null) {
             String redisKey = RedisKeys.getWebsocketListKey(message.getTargetEmail());
             stringRedisTemplate.opsForList().rightPush(redisKey, message.getContent());
@@ -87,14 +91,14 @@ public class WebSocketServer {
     public void onClose(Session session, @PathParam(value = "token") String token) {
         String email = (String) session.getUserProperties().get("email");
         log.info("WebSocket:User {} is closing", email);
-        sessionMap.remove(email);
+        SESSION_MAP.remove(email);
     }
 
     @OnError
     public void onError(Throwable throwable, Session session) {
         log.info("WebSocket:{}", throwable.getMessage());
         String email = (String) session.getUserProperties().get("email");
-        sessionMap.remove(email);
+        SESSION_MAP.remove(email);
     }
 
 

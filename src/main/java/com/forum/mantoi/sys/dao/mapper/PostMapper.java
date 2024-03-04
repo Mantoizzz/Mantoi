@@ -15,9 +15,9 @@ import java.util.List;
 public interface PostMapper extends BaseMapper<Post> {
 
     @Select(value = "select * from mantoi.t_post order by score desc limit 20;")
-    public List<Post> findTopPosts();
+    List<Post> findTopPosts();
 
 
     @Select(value = "select * from mantoi.t_post where author_id = #{userId};")
-    public List<Post> findPostsByUserId(@Param("userId") long userId);
+    List<Post> findPostsByUserId(@Param("userId") long userId);
 }

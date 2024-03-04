@@ -2,7 +2,7 @@ package com.forum.mantoi.controller;
 
 import com.forum.mantoi.common.constant.ApiRouteConstants;
 import com.forum.mantoi.common.constant.Entity;
-import com.forum.mantoi.common.pojo.response.UserProfileDto;
+import com.forum.mantoi.common.pojo.dto.response.UserProfileDto;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.User;

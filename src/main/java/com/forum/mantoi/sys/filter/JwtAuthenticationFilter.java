@@ -1,11 +1,11 @@
 package com.forum.mantoi.sys.filter;
 
-import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.constant.Constants;
+import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.JwtUser;
-import com.forum.mantoi.sys.dao.repository.UserRepository;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.FilterChain;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Objects;
 
 /**
  * @author DELL
@@ -35,7 +35,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtilities jwtUtilities;
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -46,11 +46,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (token != null && jwtUtilities.validateToken(token)) {
             String email = jwtUtilities.extractEmail(token);
 
-            Optional<User> user = userRepository.findByEmail(email);
-            if (user.isEmpty()) {
+            User user = userMapper.findByEmail(email);
+            if (Objects.isNull(user)) {
                 throw new UserException(CommonResultStatus.FAIL, "Email does not refer to anyone");
             }
-            UserDetails userDetails = new JwtUser(user.get());
+            UserDetails userDetails = new JwtUser(user);
             String blacklistTokenKey = RedisKeys.getBlackListTokenKey(userDetails.getUsername());
             if (Boolean.TRUE.equals(redisTemplate.hasKey(blacklistTokenKey))) {
                 filterChain.doFilter(request, response);

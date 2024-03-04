@@ -1,14 +1,12 @@
 package com.forum.mantoi.sys.services;
 
-import com.forum.mantoi.common.pojo.request.DeletePostDto;
-import com.forum.mantoi.common.pojo.request.PublishPostDto;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
-import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,7 +23,7 @@ public interface PostService {
 
     public List<Post> getTopPosts();
 
-    public Page<Post> findAll(Pageable pageable);
+    public Page<Post> findPosts(int size, int page);
 
     public void updateScore(Long postId, double score);
 

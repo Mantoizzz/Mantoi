@@ -1,8 +1,8 @@
 package com.forum.mantoi.sys.services;
 
 import com.forum.mantoi.common.constant.Entity;
-import com.forum.mantoi.common.pojo.request.RegisterRequestDto;
-import com.forum.mantoi.common.pojo.response.RegisterResponseDto;
+import com.forum.mantoi.common.pojo.dto.request.RegisterRequestDto;
+import com.forum.mantoi.common.pojo.dto.response.RegisterResponseDto;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;

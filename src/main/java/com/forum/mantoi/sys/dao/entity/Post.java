@@ -23,6 +23,9 @@ public class Post {
     @TableField(value = "author_id")
     private Long authorId;
 
+    @TableField(value = "short_content")
+    private String shortContent;
+
     @TableField(value = "likes")
     private Integer likes;
 

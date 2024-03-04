@@ -1,4 +1,4 @@
-package com.forum.mantoi.common.pojo.request;
+package com.forum.mantoi.common.pojo.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;

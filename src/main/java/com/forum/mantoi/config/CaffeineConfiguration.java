@@ -9,22 +9,21 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Caffeine Configuration
+ *
+ * @author DELL
  */
 @Configuration
 public class CaffeineConfiguration {
 
-    private final int EXPIRE_TIME = 10;
-
-    private final int INITIAL_CAPACITY = 50;
-
-    private final int MAXIMUM_SIZE = 500;
-
     @Bean(name = "caffeineCacheManager")
     public Cache<String, Object> localCacheManager() {
+        int expireTime = 10;
+        int initialCapacity = 50;
+        int maximumSize = 500;
         return Caffeine.newBuilder()
-                .expireAfterWrite(EXPIRE_TIME, TimeUnit.MINUTES)
-                .initialCapacity(INITIAL_CAPACITY)
-                .maximumSize(MAXIMUM_SIZE)
+                .expireAfterWrite(expireTime, TimeUnit.MINUTES)
+                .initialCapacity(initialCapacity)
+                .maximumSize(maximumSize)
                 .recordStats()
                 .build();
 

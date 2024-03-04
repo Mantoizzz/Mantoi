@@ -2,6 +2,10 @@ package com.forum.mantoi.common.response;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * @author DELL
+ */
+
 @AllArgsConstructor
 public enum CommonResultStatus implements ResultStatus {
 

@@ -1,29 +1,20 @@
 package com.forum.mantoi.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forum.mantoi.common.constant.ApiRouteConstants;
-import com.forum.mantoi.common.pojo.request.DeletePostDto;
-import com.forum.mantoi.common.pojo.request.PublishCommentDto;
-import com.forum.mantoi.common.pojo.response.PostDetailResponse;
-import com.forum.mantoi.common.response.CommonResultStatus;
-import com.forum.mantoi.common.pojo.request.PublishPostDto;
+import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.dto.request.PublishCommentDto;
+import com.forum.mantoi.common.pojo.dto.response.PostDetailResponse;
+import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
-import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.sys.services.*;
-import com.forum.mantoi.sys.services.impl.LikeServiceImpl;
-import com.forum.mantoi.utils.CommunityUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -44,45 +35,21 @@ public class PostController implements ApiRouteConstants {
     private final UserService userService;
 
 
-    /*
-    当前登录的用户
-     */
-    @ModelAttribute("curUser")
-    public String user() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.isAuthenticated()) {
-            return authentication.getName();
-        } else {
-            return "Anonymous User";
-        }
-    }
-
-    /*
-    在发布一篇帖子前要判断当前用户是否为Anonymous User,否则不提供发布帖子功能
-     */
-    @ModelAttribute("postRequest")
-    public PublishPostDto publishPost() throws UserException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!authentication.isAuthenticated()) {
-            throw new UserException(CommonResultStatus.UNAUTHORIZED, "请登录再使用该功能");
-        }
-        return new PublishPostDto();
-    }
-
-    /*
-    帖子列表
-     */
-    @ModelAttribute("postList")
-    public Page<Post> pages(@PageableDefault(size = 10) Pageable pageable) {
-        return postService.findAll(pageable);
-    }
-
     @PostMapping(API_POST_PREFIX + API_ADD)
     public RestResponse<Void> addPost(@RequestBody PublishPostDto dto) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         dto.setAuthor(user);
         return postService.publish(dto);
     }
+
+
+    @GetMapping(API_POST_PREFIX + API_POST_LOAD_MORE)
+    public RestResponse<Page<Post>> loadMore(@RequestParam(value = "page", defaultValue = "1") int page
+            , @RequestParam(value = "size", defaultValue = "10") int size) {
+        Page<Post> posts = postService.findPosts(size, page);
+        return RestResponse.ok(posts);
+    }
+
 
     /**
      * 访问论坛的处理方法

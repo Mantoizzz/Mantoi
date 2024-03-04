@@ -10,6 +10,9 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author DELL
+ */
 @Component
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
 

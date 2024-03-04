@@ -1,4 +1,4 @@
-package com.forum.mantoi.common.pojo.request;
+package com.forum.mantoi.common.pojo.dto.request;
 
 import com.forum.mantoi.sys.dao.entity.User;
 import lombok.Builder;

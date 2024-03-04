@@ -1,6 +1,7 @@
 package com.forum.mantoi.sys.quartz;
 
 import com.forum.mantoi.common.response.CommonResultStatus;
+import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.common.constant.Entity;
@@ -16,6 +17,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,8 +38,6 @@ public class ScoreRefresh implements Job {
     private static final double LIKE_WEIGHT = 1.0;
 
     private static final double COMMENT_WEIGHT = 2.0;
-
-    private final PostServices postServices;
 
     private final PostService postService;
 
@@ -76,11 +76,11 @@ public class ScoreRefresh implements Job {
         }
 
         long likeCount = likeServiceImpl.viewLikes(Entity.POST, postId);
-        int commentCount = post.getComments().size();
+        int commentCount = postService.getComments(post).size();
         Instant publishTime = post.getPublishTime().toInstant();
         long hours = getTimeDuration(publishTime);
         double score = calculateScore(likeCount, commentCount, hours);
-        postServices.updateScore(postId, score);
+        postService.updateScore(postId, score);
         //TODO 更新elasticsearch的score
 
     }

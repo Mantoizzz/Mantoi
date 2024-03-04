@@ -9,6 +9,8 @@ public interface ApiRouteConstants {
 
     String API_AUTH_PREFIX = "/auth";
 
+    String API_CAPTCHA = "/captcha";
+
     String API_REGISTER = "/register";
 
     String API_LOGIN = "/login";
@@ -28,6 +30,8 @@ public interface ApiRouteConstants {
     String API_ADD = "/add";
 
     String API_POST_DETAIL = "/detail/{postId}/{page}";
+
+    String API_POST_LOAD_MORE = "/loadMore";
 
     String API_POST_DELETE = "/delete/{postId}";
 

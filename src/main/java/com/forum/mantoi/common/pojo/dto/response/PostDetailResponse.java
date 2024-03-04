@@ -1,4 +1,4 @@
-package com.forum.mantoi.common.pojo.response;
+package com.forum.mantoi.common.pojo.dto.response;
 
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;

@@ -1,7 +1,9 @@
 package com.forum.mantoi.sys.services.impl;
 
-import com.forum.mantoi.common.pojo.request.DeletePostDto;
-import com.forum.mantoi.common.pojo.request.PublishPostDto;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
@@ -13,11 +15,8 @@ import com.forum.mantoi.sys.dao.mapper.PostMapper;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.PostService;
-import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -43,6 +42,7 @@ public class PostServiceImpl implements PostService {
         Post post = Post.builder()
                 .authorId(dto.getAuthor().getId())
                 .title(dto.getTitle())
+                .shortContent(dto.content.substring(0, 25))
                 .likes(0)
                 .score(0D)
                 .build();
@@ -73,17 +73,20 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getTopPosts() {
-        return null;
+        return postMapper.findTopPosts();
     }
 
     @Override
-    public Page<Post> findAll(Pageable pageable) {
-        return null;
+    public Page<Post> findPosts(int size, int page) {
+        Page<Post> postPage = PageDTO.of(page, size);
+        return postMapper.selectPage(postPage, null);
     }
 
     @Override
     public void updateScore(Long postId, double score) {
-
+        Post post = findById(postId);
+        post.setScore(score);
+        postMapper.updateById(post);
     }
 
     @Override

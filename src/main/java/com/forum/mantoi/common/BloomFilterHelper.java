@@ -35,25 +35,4 @@ public class BloomFilterHelper<T> {
         return true;
     }
 
-    public static void main(String[] args) {
-        Function<String, Integer>[] arr = new Function[]{HashFunctions.hashFunction1(), HashFunctions.hashFunction2(), HashFunctions.hashFunction3()};
-        BloomFilterHelper<String> bloomFilterHelper = new BloomFilterHelper<>(new BitSet(10000000), 10000000, arr);
-        List<String> collectionA = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 10000; i++) {
-            int size = random.nextInt(1000);
-            String str = RandomStringUtils.randomAlphabetic(size);
-            collectionA.add(str);
-            bloomFilterHelper.add(str);
-        }
-        int cnt = 0;
-        for (int i = 0; i < 50000; i++) {
-            int size = random.nextInt(1000);
-            String str = RandomStringUtils.randomGraph(size);
-            if (bloomFilterHelper.contains(str)) {
-                cnt++;
-            }
-        }
-        System.out.println(cnt);
-    }
 }

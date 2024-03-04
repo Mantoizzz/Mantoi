@@ -1,7 +1,7 @@
 package com.forum.mantoi.sys.services.impl;
 
-import com.forum.mantoi.common.pojo.request.DeleteCommentDto;
-import com.forum.mantoi.common.pojo.request.PublishCommentDto;
+import com.forum.mantoi.common.pojo.dto.request.DeleteCommentDto;
+import com.forum.mantoi.common.pojo.dto.request.PublishCommentDto;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;

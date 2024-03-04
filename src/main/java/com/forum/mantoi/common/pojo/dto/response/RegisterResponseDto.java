@@ -1,4 +1,4 @@
-package com.forum.mantoi.common.pojo.response;
+package com.forum.mantoi.common.pojo.dto.response;
 
 import lombok.Builder;
 import lombok.Data;

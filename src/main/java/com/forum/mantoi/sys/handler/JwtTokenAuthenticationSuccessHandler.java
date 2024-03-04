@@ -1,11 +1,11 @@
 package com.forum.mantoi.sys.handler;
 
-import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.constant.Constants;
+import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.JwtUser;
-import com.forum.mantoi.sys.dao.repository.UserRepository;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +18,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 /**
  * @author Mantoi
  */
@@ -26,7 +28,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     private final JwtUtilities jwtUtilities;
 
@@ -36,7 +38,10 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws UserException {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("authenticationName:{}", authentication.getName());
-        User user = userRepository.findByUsername(authentication.getName()).orElseThrow(() -> new UserException(CommonResultStatus.FAIL, "User not found"));
+        User user = userMapper.findByUsername(authentication.getName());
+        if (Objects.isNull(user)) {
+            throw new UserException(CommonResultStatus.RECORD_NOT_EXIST, CommonResultStatus.RECORD_NOT_EXIST.getMsg());
+        }
         JwtUser jwtUser = new JwtUser(user);
         String token = jwtUtilities.generateToken(user.getEmail(), jwtUser.getAuthorities());
         //删除Redis中的黑名单key

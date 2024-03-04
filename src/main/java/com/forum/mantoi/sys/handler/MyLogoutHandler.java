@@ -25,11 +25,9 @@ public class MyLogoutHandler implements LogoutHandler {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    private final JwtUtilities jwtUtilities;
-
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String token = jwtUtilities.getToken(request);
+        String token = JwtUtilities.getToken(request);
         String username = authentication.getName();
         //由于token不多，所以采用为每个黑名单键设置一个key的策略
         int expiration = 7;

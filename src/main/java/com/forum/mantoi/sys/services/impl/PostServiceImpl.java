@@ -10,6 +10,7 @@ import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.sys.dao.mapper.CommentMapper;
 import com.forum.mantoi.sys.dao.mapper.PostContentMapper;
 import com.forum.mantoi.sys.dao.mapper.PostMapper;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
@@ -34,6 +35,8 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
 
     private final UserMapper userMapper;
+
+    private final CommentMapper commentMapper;
 
     private final PostContentMapper postContentMapper;
 
@@ -101,5 +104,6 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Comment> getComments(Post post) {
+        return commentMapper.selectCommentsByPostId(post.getId());
     }
 }

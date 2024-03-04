@@ -24,9 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @AllArgsConstructor
 @Component
 @ServerEndpoint(value = "/chat/{token}")
+@Deprecated
 public class WebSocketServer {
-
-    private final JwtUtilities jwtUtilities;
 
 
     private final StringRedisTemplate stringRedisTemplate;
@@ -45,7 +44,7 @@ public class WebSocketServer {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "token") String token) {
-        String email = jwtUtilities.extractEmail(token);
+        String email = JwtUtilities.extractEmail(token);
         session.getUserProperties().put("email", email);
         SESSION_MAP.put(email, session);
         String redisKey = RedisKeys.getWebsocketListKey(email);

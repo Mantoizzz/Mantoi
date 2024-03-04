@@ -31,6 +31,12 @@ public class RestResponse<T> {
         this.data = data;
     }
 
+    private RestResponse(T data, ResultStatus status, String msg) {
+        this.data = data;
+        this.resultStatus = status;
+        this.message = status.getMsg();
+    }
+
     public static RestResponse<Void> ok() {
         return new RestResponse<>();
     }
@@ -45,6 +51,10 @@ public class RestResponse<T> {
 
     public static RestResponse<Void> error() {
         return new RestResponse<>(CommonResultStatus.SERVER_ERROR);
+    }
+
+    public static <T> RestResponse<T> fail(T data, ResultStatus status) {
+        return new RestResponse<>(data, status, status.getMsg());
     }
 
 }

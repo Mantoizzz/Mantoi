@@ -2,12 +2,12 @@ package com.forum.mantoi.config;
 
 import com.forum.mantoi.common.constant.ApiRouteConstants;
 import com.forum.mantoi.common.constant.Constants;
+import com.forum.mantoi.sys.filter.CaptchaVerifyFilter;
 import com.forum.mantoi.sys.filter.JwtAuthenticationFilter;
-import com.forum.mantoi.sys.handler.JwtTokenAuthenticationSuccessHandler;
+import com.forum.mantoi.sys.handler.JwtAuthenticationSuccessHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,10 +16,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -29,23 +25,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig implements ApiRouteConstants {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-    private final JwtTokenAuthenticationSuccessHandler jwtTokenAuthenticationSuccessHandler;
+    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
+
+    private final CaptchaVerifyFilter captchaVerifyFilter;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
 
+        http.authorizeHttpRequests(config ->
+                config.requestMatchers(API_AUTH_PREFIX + API_ALL).permitAll()
+        );
+
         http.formLogin(config -> config
                 .usernameParameter(Constants.EMAIL)
                 .passwordParameter(Constants.PASSWORD)
                 .loginPage(ApiRouteConstants.API_LOGIN_URL)
                 .loginProcessingUrl(ApiRouteConstants.API_LOGIN_URL)
-                .successHandler(jwtTokenAuthenticationSuccessHandler)
+                .successHandler(jwtAuthenticationSuccessHandler)
         );
 
         http.logout(config -> config
@@ -54,7 +56,8 @@ public class SecurityConfig {
         );
 
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationFilter, CaptchaVerifyFilter.class);
+        http.addFilterBefore(captchaVerifyFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();

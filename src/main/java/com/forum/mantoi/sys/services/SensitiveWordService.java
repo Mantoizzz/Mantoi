@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@Deprecated
 @AllArgsConstructor
 public class SensitiveWordService {
 

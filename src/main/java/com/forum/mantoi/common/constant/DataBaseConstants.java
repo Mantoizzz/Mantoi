@@ -11,8 +11,9 @@ public class DataBaseConstants {
 
         public static final String COLUMN_USERNAME = "username";
 
-
         public static final String COLUMN_EMAIL = "email";
+
+        public static final String COLUMN_PHONE = "phone";
     }
 
     public static class PostTable {

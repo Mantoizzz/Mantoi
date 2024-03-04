@@ -2,6 +2,9 @@ package com.forum.mantoi.sys.exception;
 
 import com.forum.mantoi.common.response.ResultStatus;
 
+/**
+ * @author DELL
+ */
 public class UserException extends BusinessException {
 
     public UserException(ResultStatus status) {

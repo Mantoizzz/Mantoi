@@ -21,50 +21,49 @@ import java.util.function.Function;
  * @author DELL
  */
 @Slf4j
-@Component
 public class JwtUtilities {
 
 
     @Value("${jwt.secret}")
-    private String secret;
+    private static String secret;
 
     @Value("${jwt.expiration}")
-    private Long jwtExpiration;
+    private static Long jwtExpiration;
 
 
-    public String extractEmail(String token) {
+    public static String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public Claims extractAllClaims(String token) {
+    public static Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
 
-    public Date extractExpiration(String token) {
+    public static Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public static Boolean validateToken(String token, UserDetails userDetails) {
         final String email = extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    public Boolean isTokenExpired(String token) {
+    public static Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String email, Collection<? extends GrantedAuthority> roles) {
+    public static String generateToken(String email, Collection<? extends GrantedAuthority> roles) {
         return Jwts.builder().setSubject(email).claim("role", roles).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(Date.from(Instant.now().plus(jwtExpiration, TimeUnit.DAYS.toChronoUnit())))
                 .signWith(SignatureAlgorithm.HS256, secret).compact();
     }
 
-    public boolean validateToken(String token) {
+    public static boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
             return true;
@@ -82,7 +81,7 @@ public class JwtUtilities {
         return false;
     }
 
-    public String getToken(HttpServletRequest httpServletRequest) {
+    public static String getToken(HttpServletRequest httpServletRequest) {
         final String bearerToken = httpServletRequest.getHeader(Constants.JWT_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);

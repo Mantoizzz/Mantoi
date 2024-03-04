@@ -9,6 +9,10 @@ import lombok.Getter;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author DELL
+ */
+@Deprecated
 public class MyWordReplaceHandler implements IWordReplace {
 
     private Map<String, String> replaceMap;

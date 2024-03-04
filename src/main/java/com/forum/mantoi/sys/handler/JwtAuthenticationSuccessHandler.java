@@ -5,7 +5,7 @@ import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
-import com.forum.mantoi.sys.model.JwtUser;
+import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,11 +26,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @Component
 @Slf4j
-public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private final UserMapper userMapper;
-
-    private final JwtUtilities jwtUtilities;
 
     private final StringRedisTemplate redisTemplate;
 
@@ -42,8 +40,8 @@ public class JwtTokenAuthenticationSuccessHandler implements AuthenticationSucce
         if (Objects.isNull(user)) {
             throw new UserException(CommonResultStatus.RECORD_NOT_EXIST, CommonResultStatus.RECORD_NOT_EXIST.getMsg());
         }
-        JwtUser jwtUser = new JwtUser(user);
-        String token = jwtUtilities.generateToken(user.getEmail(), jwtUser.getAuthorities());
+        SysUser sysUser = new SysUser(user);
+        String token = JwtUtilities.generateToken(user.getEmail(), sysUser.getAuthorities());
         //删除Redis中的黑名单key
         String key = RedisKeys.getBlackListTokenKey(user.getUsername());
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {

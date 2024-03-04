@@ -21,6 +21,7 @@ import java.util.List;
  * @author DELL
  */
 @Service
+@Deprecated
 @AllArgsConstructor
 public class ElasticsearchService {
 

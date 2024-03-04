@@ -6,6 +6,7 @@ import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.elc.ElasticsearchConfiguration;
 
 @Configuration
+@Deprecated
 public class ElasticClientConfig extends ElasticsearchConfiguration {
 
     @Value(value = "${spring.elasticsearch.username}")

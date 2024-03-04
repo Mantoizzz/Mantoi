@@ -24,6 +24,9 @@ public class User {
     @TableField(value = "password")
     private String password;
 
+    @TableField(value = "phone")
+    private String phone;
+
     @TableField(value = "email")
     private String email;
 

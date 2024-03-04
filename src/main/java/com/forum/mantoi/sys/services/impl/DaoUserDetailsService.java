@@ -6,7 +6,7 @@ import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
-import com.forum.mantoi.sys.model.JwtUser;
+import com.forum.mantoi.sys.model.SysUser;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,7 +22,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Service
 @Slf4j
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class DaoUserDetailsService implements UserDetailsService {
 
     private final UserMapper userMapper;
 
@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         queryWrapper.eq(DataBaseConstants.UserTable.COLUMN_EMAIL, email);
         User user = userMapper.selectOne(queryWrapper);
         if (Objects.nonNull(user)) {
-            return new JwtUser(user);
+            return new SysUser(user);
         } else {
             throw new UserException(CommonResultStatus.FAIL, "User not found");
         }

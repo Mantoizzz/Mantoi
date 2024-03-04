@@ -23,7 +23,9 @@ public enum CommonResultStatus implements ResultStatus {
 
     SERVER_ERROR(-1, "服务器内部错误"),
 
-    NULL(1006, "值不可以为空");
+    NULL(1006, "值不可以为空"),
+
+    TOO_MANY_REQUEST(1007, "请稍后重试");
 
     private final int code;
 
@@ -38,4 +40,4 @@ public enum CommonResultStatus implements ResultStatus {
     public String getMsg() {
         return msg;
     }
-    }
+}

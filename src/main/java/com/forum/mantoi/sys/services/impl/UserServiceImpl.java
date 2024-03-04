@@ -46,8 +46,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final JwtUtilities jwtUtilities;
-
     private final RedisTemplate<String, Object> redisTemplate;
 
     /**
@@ -63,13 +61,16 @@ public class UserServiceImpl implements UserService {
         queryWrapper.eq(DataBaseConstants.UserTable.COLUMN_USERNAME, dto.getUsername())
                 .or()
                 .eq(DataBaseConstants.UserTable.COLUMN_EMAIL, dto.getEmail())
+                .or()
+                .eq(DataBaseConstants.UserTable.COLUMN_PHONE, dto.getPhone())
                 .last(DataBaseConstants.SqlEnum.LIMIT_1.getSql());
         if (userMapper.selectCount(queryWrapper) > 0) {
-            throw new BusinessException(CommonResultStatus.FAIL, "用户名已存在");
+            throw new BusinessException(CommonResultStatus.FAIL, "用户已存在");
         }
         String password = passwordEncoder.encode(dto.getPassword());
         User user = User.builder()
                 .password(password)
+                .phone(dto.getPhone())
                 .email(dto.getEmail())
                 .username(dto.getUsername())
                 .role(Role.USER)
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
 
         return RestResponse.ok(RegisterResponseDto.builder()
-                .token(jwtUtilities.generateToken(dto.getEmail(), Role.USER.getAuthorities()))
+                .token(JwtUtilities.generateToken(dto.getEmail(), Role.USER.getAuthorities()))
                 .build());
     }
 

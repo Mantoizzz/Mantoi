@@ -7,9 +7,13 @@ package com.forum.mantoi.common.constant;
  */
 public interface ApiRouteConstants {
 
+    String API_ALL = "/**";
+
     String API_AUTH_PREFIX = "/auth";
 
     String API_CAPTCHA = "/captcha";
+
+    String API_SMS = "/sms/captcha";
 
     String API_REGISTER = "/register";
 

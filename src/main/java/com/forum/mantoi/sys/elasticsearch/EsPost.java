@@ -10,6 +10,7 @@ import java.util.Date;
 @Document(indexName = "es_post")
 @Data
 @Entity
+@Deprecated
 public class EsPost {
 
     @Id

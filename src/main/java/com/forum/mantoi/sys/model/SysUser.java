@@ -15,7 +15,7 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtUser implements UserDetails {
+public class SysUser implements UserDetails {
 
     private Long id;
 
@@ -24,6 +24,8 @@ public class JwtUser implements UserDetails {
     private String email;
 
     private String password;
+
+    private String phone;
 
     private Role role;
 
@@ -38,12 +40,13 @@ public class JwtUser implements UserDetails {
     private Boolean isAccountNonLocked;
 
 
-    public JwtUser(User user) {
+    public SysUser(User user) {
         id = user.getId();
         email = user.getEmail();
         role = user.getRole();
         username = user.getUsername();
         password = user.getPassword();
+        phone = user.getPhone();
     }
 
 

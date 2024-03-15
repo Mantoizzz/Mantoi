@@ -3,6 +3,9 @@ package com.forum.mantoi;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
 /**
  * @author DELL
@@ -11,8 +14,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @MapperScan(value = "com.forum.mantoi.sys.dao.mapper")
 public class MantoiApplication {
 
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(MantoiApplication.class, args);
     }
+
 
 }

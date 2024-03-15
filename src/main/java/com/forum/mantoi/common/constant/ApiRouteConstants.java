@@ -39,7 +39,7 @@ public interface ApiRouteConstants {
 
     String API_POST_DELETE = "/delete/{postId}";
 
-    String API_LIKE = "/**/like";
+    String API_LIKE = "/*/like";
 
     String API_USER_FOLLOW = "/follow";
 

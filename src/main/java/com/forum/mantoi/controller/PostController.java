@@ -11,9 +11,12 @@ import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.common.constant.Entity;
+import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.sys.services.*;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,9 +39,10 @@ public class PostController implements ApiRouteConstants {
 
 
     @PostMapping(API_POST_PREFIX + API_ADD)
+    @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addPost(@RequestBody PublishPostDto dto) {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        dto.setAuthor(user);
+        SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        dto.setAuthor(userService.convert(user));
         return postService.publish(dto);
     }
 
@@ -62,7 +66,7 @@ public class PostController implements ApiRouteConstants {
     public RestResponse<PostDetailResponse> getPostDetail(@PathVariable("postId") long postId, @PathVariable("page") int curPage) {
         Post post = postService.findById(postId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User curUser = authentication == null ? null : ((User) authentication.getPrincipal());
+        SysUser curUser = authentication == null ? null : ((SysUser) authentication.getPrincipal());
         User author = postService.getAuthor(post);
         boolean isLiked = curUser != null && likeService.isLiked(Entity.POST, postId, curUser.getId());
         long likes = likeService.viewLikes(Entity.POST, postId);
@@ -111,15 +115,18 @@ public class PostController implements ApiRouteConstants {
     }
 
     @DeleteMapping(API_POST_PREFIX + API_POST_DELETE)
+    @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> delete(@PathVariable("postId") long postId) {
-        return postService.delete(new DeletePostDto(postId));
+        SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return postService.delete(new DeletePostDto(postId, principal.getId()));
     }
 
 
     @PostMapping(API_POST_PREFIX + API_POST_ADD_COMMENT)
     @ResponseBody
+    @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addComment(@PathVariable("postId") long postId, @RequestBody PublishCommentDto dto) {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = Comment.builder()
                 .postId(postId)
                 .authorId(principal.getId())
@@ -132,8 +139,9 @@ public class PostController implements ApiRouteConstants {
 
     @PostMapping(API_POST_PREFIX + API_POST_ADD_REPLY)
     @ResponseBody
+    @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addReply(@PathVariable long commentId, @RequestBody PublishCommentDto dto) {
-        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = Comment.builder()
                 .authorId(principal.getId())
                 .postId(null)
@@ -143,6 +151,5 @@ public class PostController implements ApiRouteConstants {
                 .build();
         return commentService.save(comment);
     }
-
 
 }

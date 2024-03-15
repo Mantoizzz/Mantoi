@@ -1,5 +1,6 @@
 package com.forum.mantoi.sys.services.impl;
 
+import cn.hutool.core.io.resource.ClassPathResource;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
@@ -19,9 +20,11 @@ import com.forum.mantoi.sys.services.PostService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 
 /**
@@ -39,6 +42,20 @@ public class PostServiceImpl implements PostService {
     private final CommentMapper commentMapper;
 
     private final PostContentMapper postContentMapper;
+
+    private static final Set<String> stopWords;
+
+    static {
+        ClassPathResource resource = new ClassPathResource("cn_stopwords.txt");
+        try {
+            byte[] data = FileCopyUtils.copyToByteArray(resource.getFile());
+            String words = new String(data, StandardCharsets.UTF_8);
+            stopWords = new HashSet<>();
+            stopWords.addAll(Arrays.asList(words.split("\n")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     @Override
     public RestResponse<Void> publish(PublishPostDto dto) {
@@ -106,4 +123,11 @@ public class PostServiceImpl implements PostService {
     public List<Comment> getComments(Post post) {
         return commentMapper.selectCommentsByPostId(post.getId());
     }
+
+    @Override
+    public PostContent getContent(Post post) {
+        return postContentMapper.getContentByPost(post.getId());
+    }
+
+
 }

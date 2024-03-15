@@ -6,6 +6,7 @@ import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
+import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
 
 import java.util.List;
@@ -15,20 +16,22 @@ import java.util.List;
  */
 public interface PostService {
 
-    public RestResponse<Void> publish(PublishPostDto dto);
+    RestResponse<Void> publish(PublishPostDto dto);
 
-    public RestResponse<Void> delete(DeletePostDto dto);
+    RestResponse<Void> delete(DeletePostDto dto);
 
-    public Post findById(Long id);
+    Post findById(Long id);
 
-    public List<Post> getTopPosts();
+    List<Post> getTopPosts();
 
-    public Page<Post> findPosts(int size, int page);
+    Page<Post> findPosts(int size, int page);
 
-    public void updateScore(Long postId, double score);
+    void updateScore(Long postId, double score);
 
-    public User getAuthor(Post post);
+    User getAuthor(Post post);
 
-    public List<Comment> getComments(Post post);
+    List<Comment> getComments(Post post);
+
+    PostContent getContent(Post post);
 
 }

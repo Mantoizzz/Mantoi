@@ -7,6 +7,7 @@ import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.sys.model.SysUser;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ public interface UserService {
     List<Post> getUserPosts(Long id);
 
     List<Comment> getUserComments(Long id);
+
+    User convert(SysUser sysUser);
 
     /**
      * 关注某个实体

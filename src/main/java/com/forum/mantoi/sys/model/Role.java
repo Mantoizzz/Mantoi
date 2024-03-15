@@ -17,7 +17,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public enum Role {
 
-    USER(Collections.emptySet()),
+    USER(Set.of(Permission.USER_READ)),
+
+    VIP(Set.of(Permission.VIP_READ)),
 
 
     ADMIN(Set.of(Permission.ADMIN_READ,

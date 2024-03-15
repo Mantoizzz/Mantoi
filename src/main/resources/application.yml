@@ -8,6 +8,8 @@ spring:
     redis:
       host: 127.0.0.1
       port: 6379
+    mongodb:
+      uri: mongodb://localhost:27017/Mantoi
   elasticsearch:
 
     username: elastic
@@ -27,4 +29,3 @@ jwt:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  mapper-locations: src/main/resources/mapper

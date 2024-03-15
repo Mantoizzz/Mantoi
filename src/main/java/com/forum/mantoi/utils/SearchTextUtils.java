@@ -1,6 +1,7 @@
 package com.forum.mantoi.utils;
 
 import com.forum.mantoi.sys.dao.entity.Post;
+import com.forum.mantoi.sys.dao.entity.PostContent;
 import lombok.experimental.UtilityClass;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
@@ -51,8 +52,8 @@ public class SearchTextUtils {
         return list;
     }
 
-    public static List<String> tokenizationPost(Post post) throws IOException {
-        return tokenizationString(post.getTitle() + post.getContent());
+    public static List<String> tokenizationPost(Post post, PostContent content) throws IOException {
+        return tokenizationString(post.getTitle() + content.getContent());
     }
 
 }

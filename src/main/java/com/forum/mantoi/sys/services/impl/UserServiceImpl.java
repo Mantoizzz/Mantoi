@@ -14,7 +14,9 @@ import com.forum.mantoi.sys.dao.mapper.CommentMapper;
 import com.forum.mantoi.sys.dao.mapper.PostMapper;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.BusinessException;
+import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.Role;
+import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.sys.services.UserService;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
@@ -122,6 +124,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Comment> getUserComments(Long id) {
         return commentMapper.selectCommentsByUserId(id);
+    }
+
+    @Override
+    public User convert(SysUser sysUser) {
+        Long id = sysUser.getId();
+        User user = userMapper.selectById(id);
+        if (Objects.isNull(user)) {
+            throw new UserException(CommonResultStatus.RECORD_NOT_EXIST, "user not found");
+        }
+        return user;
     }
 
     /**

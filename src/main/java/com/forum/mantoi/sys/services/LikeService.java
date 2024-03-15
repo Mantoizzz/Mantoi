@@ -7,11 +7,11 @@ import com.forum.mantoi.common.constant.Entity;
  */
 public interface LikeService {
 
-    public void addLike(long userId, long objId, Entity obj);
+    void addLike(long userId, long objId, Entity obj);
 
-    public long viewLikes(Entity obj, long objId);
+    long viewLikes(Entity obj, long objId);
 
-    public boolean isLiked(Entity obj, long objId, long userId);
+    boolean isLiked(Entity obj, long objId, long userId);
 
 
 }

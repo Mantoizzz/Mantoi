@@ -2,6 +2,7 @@ package com.forum.mantoi.common.pojo.dto.response;
 
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
+import com.forum.mantoi.sys.model.SysUser;
 import lombok.Builder;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class PostDetailResponse implements Serializable {
 
     Post post;
 
-    User curUser;
+    SysUser curUser;
 
     User author;
 

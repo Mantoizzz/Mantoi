@@ -4,8 +4,6 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
-
 @Document
 @Data
 public class InvertIndex {
@@ -13,6 +11,6 @@ public class InvertIndex {
     @Id
     private String keyword;
 
-    private List<Long> documents;
+    private long[] documents;
 
 }

@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -37,10 +38,12 @@ public class PostController implements ApiRouteConstants {
 
     private final UserService userService;
 
+    private final SearchService searchService;
+
 
     @PostMapping(API_POST_PREFIX + API_ADD)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
-    public RestResponse<Void> addPost(@RequestBody PublishPostDto dto) {
+    public RestResponse<Void> addPost(@RequestBody PublishPostDto dto) throws IOException {
         SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         dto.setAuthor(userService.convert(user));
         return postService.publish(dto);
@@ -150,6 +153,17 @@ public class PostController implements ApiRouteConstants {
                 .likes(0)
                 .build();
         return commentService.save(comment);
+    }
+
+    @ResponseBody
+    @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
+    public RestResponse<List<Post>> searchPost(String input) throws IOException {
+        List<?> search = searchService.search(input, Post.class);
+        List<Post> res = new ArrayList<>();
+        for (var obj : search) {
+            res.add((Post) obj);
+        }
+        return RestResponse.ok(res);
     }
 
 }

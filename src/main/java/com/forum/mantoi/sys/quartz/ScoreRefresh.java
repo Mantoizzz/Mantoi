@@ -81,7 +81,6 @@ public class ScoreRefresh implements Job {
         long hours = getTimeDuration(publishTime);
         double score = calculateScore(likeCount, commentCount, hours);
         postService.updateScore(postId, score);
-        //TODO 更新elasticsearch的score
 
     }
 

@@ -9,6 +9,7 @@ import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public interface PostService {
 
-    RestResponse<Void> publish(PublishPostDto dto);
+    RestResponse<Void> publish(PublishPostDto dto) throws IOException;
 
     RestResponse<Void> delete(DeletePostDto dto);
 

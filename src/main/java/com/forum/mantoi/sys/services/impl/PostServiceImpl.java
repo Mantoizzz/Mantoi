@@ -17,6 +17,8 @@ import com.forum.mantoi.sys.dao.mapper.PostMapper;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.PostService;
+import com.forum.mantoi.sys.services.SearchService;
+import com.forum.mantoi.utils.TokenBucketLimiter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,6 @@ import java.util.*;
  */
 @Service
 @Slf4j
-@AllArgsConstructor
 public class PostServiceImpl implements PostService {
 
     private final PostMapper postMapper;
@@ -43,22 +44,21 @@ public class PostServiceImpl implements PostService {
 
     private final PostContentMapper postContentMapper;
 
-    private static final Set<String> stopWords;
+    private final SearchService searchService;
 
-    static {
-        ClassPathResource resource = new ClassPathResource("cn_stopwords.txt");
-        try {
-            byte[] data = FileCopyUtils.copyToByteArray(resource.getFile());
-            String words = new String(data, StandardCharsets.UTF_8);
-            stopWords = new HashSet<>();
-            stopWords.addAll(Arrays.asList(words.split("\n")));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    private final TokenBucketLimiter limiter;
+
+    public PostServiceImpl(PostMapper postMapper, UserMapper userMapper, CommentMapper commentMapper, PostContentMapper postContentMapper, SearchService searchService) {
+        this.postMapper = postMapper;
+        this.userMapper = userMapper;
+        this.commentMapper = commentMapper;
+        this.postContentMapper = postContentMapper;
+        this.searchService = searchService;
+        this.limiter = new TokenBucketLimiter(10, 10);
     }
 
     @Override
-    public RestResponse<Void> publish(PublishPostDto dto) {
+    public RestResponse<Void> publish(PublishPostDto dto) throws IOException {
         Post post = Post.builder()
                 .authorId(dto.getAuthor().getId())
                 .title(dto.getTitle())
@@ -73,6 +73,7 @@ public class PostServiceImpl implements PostService {
                 .build();
         postContentMapper.insert(postContent);
 
+        searchService.saveDocument(post, postContent);
         return RestResponse.ok();
     }
 
@@ -98,6 +99,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Page<Post> findPosts(int size, int page) {
+        if (!limiter.tryAcquire()) {
+            throw new BusinessException(CommonResultStatus.TOO_MANY_REQUEST, CommonResultStatus.TOO_MANY_REQUEST.getMsg());
+        }
         Page<Post> postPage = PageDTO.of(page, size);
         return postMapper.selectPage(postPage, null);
     }

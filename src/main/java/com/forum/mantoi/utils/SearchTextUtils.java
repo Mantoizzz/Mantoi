@@ -3,57 +3,80 @@ package com.forum.mantoi.utils;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.PostContent;
 import lombok.experimental.UtilityClass;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.CharArraySet;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 
 /**
  * @author DELL
  */
 @UtilityClass
+@Slf4j
 public class SearchTextUtils {
 
-    private static final Set<String> STOP_WORDS = new HashSet<>(Arrays.asList("和", "的", "与", "以及", "或者", "或", "还有", "虽然", "但是", "而且", "难道", "我", "你", "他"));
+    private static final Set<String> STOP = new HashSet<>();
 
-    public static String optimizeText(String text) {
-        String lowerText = text.toLowerCase();
-        String noPunctuationText = lowerText.replaceAll("\\p{Punct}", "");
+    public static final Set<String> HIGH_FREQUENCY_WORDS = Set.of("字节", "腾讯", "阿里巴巴", "小米", "华为", "京东", "美团",
+            "快手", "小红书", "顺丰", "得物", "bilibili", "秋招", "春招", "蚂蚁", "塞力斯", "Momenta",
+            "微软", "Nvidia");
 
-        StringBuilder resultText = new StringBuilder();
-        for (String word : noPunctuationText.split("\\s+")) {
-            if (!STOP_WORDS.contains(word)) {
-                resultText.append(word).append(" ");
+    static {
+        try (BufferedReader reader = Files.newBufferedReader(Paths.get("src/main/resources/cn_stopwords.txt"), StandardCharsets.UTF_8)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                STOP.add(line.trim());
             }
+        } catch (Exception e) {
+            log.error("Read STOP WORDS Error");
         }
 
-        return resultText.toString().trim();
     }
 
-    public static List<String> tokenizationString(String text) throws IOException {
-        CharArraySet charArraySet = new CharArraySet(STOP_WORDS, true);
+    private static String optimizeText(String text) {
+        return text.toLowerCase().replaceAll("\\p{Punct}", "").trim();
+    }
+
+    private static Set<String> tokenizationString(String text) throws IOException {
+        CharArraySet charArraySet = new CharArraySet(STOP, true);
         Analyzer analyzer = new SmartChineseAnalyzer(charArraySet);
-        StringReader stringReader = new StringReader(text);
-        TokenStream tokenStream = analyzer.tokenStream("帖子分词", stringReader);
+        StringReader stringReader = new StringReader(optimizeText(text));
+        TokenStream tokenStream = analyzer.tokenStream("分词", stringReader);
         CharTermAttribute attribute = tokenStream.addAttribute(CharTermAttribute.class);
 
-        List<String> list = new ArrayList<>();
+        Set<String> set = new HashSet<>();
         tokenStream.reset();
         while (tokenStream.incrementToken()) {
-            list.add(attribute.toString());
+            set.add(attribute.toString());
         }
         tokenStream.close();
         analyzer.close();
-        return list;
+        return set;
     }
 
-    public static List<String> tokenizationPost(Post post, PostContent content) throws IOException {
+    public static Set<String> tokenizationPost(Post post, PostContent content) throws IOException {
         return tokenizationString(post.getTitle() + content.getContent());
+    }
+
+    public static Set<String> tokenizationInput(String input) throws IOException {
+        return tokenizationString(input);
+    }
+
+    public static long[] process(long id, long[] document) {
+        int count = (int) (id / 64);
+        int rest = count & 63;
+        document[count] = document[count] | (1L << rest);
+        return document;
     }
 
 }

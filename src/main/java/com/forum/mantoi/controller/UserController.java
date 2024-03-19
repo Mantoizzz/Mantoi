@@ -7,12 +7,15 @@ import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.exception.BusinessException;
+import com.forum.mantoi.sys.services.SearchService;
 import com.forum.mantoi.sys.services.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,8 @@ import java.util.Map;
 public class UserController implements ApiRouteConstants {
 
     private final UserService userService;
+
+    private final SearchService searchService;
 
     @GetMapping(API_USER_PROFILE)
     @ResponseBody
@@ -74,6 +79,16 @@ public class UserController implements ApiRouteConstants {
         } else {
             throw new BusinessException(CommonResultStatus.FORBIDDEN, "只能查看自己的粉丝列表");
         }
+    }
+
+    @ResponseBody
+    public RestResponse<List<User>> searchUser(String input) throws IOException {
+        List<?> search = searchService.search(input, User.class);
+        List<User> res = new ArrayList<>();
+        for (var obj : search) {
+            res.add((User) obj);
+        }
+        return RestResponse.ok(res);
     }
 
 

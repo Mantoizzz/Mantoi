@@ -21,8 +21,11 @@ import java.util.function.Function;
  * @author DELL
  */
 @Slf4j
-public class JwtUtilities {
+public final class JwtUtilities {
 
+    private JwtUtilities() {
+
+    }
 
     @Value("${jwt.secret}")
     private static String secret;

@@ -7,7 +7,11 @@ import com.forum.mantoi.common.constant.Entity;
  *
  * @author DELL
  */
-public class RedisKeys {
+public final class RedisKeys {
+
+    private RedisKeys() {
+
+    }
 
     private static final String ENTITY_LIKE_SET_PREFIX = "likeSet:entity:";
 

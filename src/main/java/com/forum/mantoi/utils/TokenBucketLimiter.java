@@ -2,6 +2,9 @@ package com.forum.mantoi.utils;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * @author DELL
+ */
 public class TokenBucketLimiter {
 
     private final long maxTokens;

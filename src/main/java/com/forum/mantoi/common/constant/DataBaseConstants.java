@@ -1,5 +1,6 @@
 package com.forum.mantoi.common.constant;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -9,6 +10,10 @@ public class DataBaseConstants {
 
     public static class UserTable {
 
+        private UserTable() {
+
+        }
+
         public static final String COLUMN_USERNAME = "username";
 
         public static final String COLUMN_EMAIL = "email";
@@ -17,9 +22,14 @@ public class DataBaseConstants {
     }
 
     public static class PostTable {
+
+        private PostTable() {
+        }
+
         public static final String TABLE_NAME = "t_post";
     }
 
+    @AllArgsConstructor
     public enum CommonColumnEnum {
 
         ID("id"),
@@ -28,8 +38,7 @@ public class DataBaseConstants {
 
         UPDATE_TIME("update_time");
 
-        CommonColumnEnum(String name) {
-        }
+        private final String name;
 
     }
 

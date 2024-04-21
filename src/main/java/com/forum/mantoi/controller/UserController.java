@@ -9,7 +9,9 @@ import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.SearchService;
 import com.forum.mantoi.sys.services.UserService;
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.apiguardian.api.API;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +24,14 @@ import java.util.Map;
 /**
  * @author DELL
  */
-@Controller
+@RestController
 @AllArgsConstructor
 public class UserController implements ApiRouteConstants {
 
     private final UserService userService;
 
-    private final SearchService searchService;
-
     @GetMapping(API_USER_PROFILE)
-    @ResponseBody
+    @ApiOperation("获取用户相关信息")
     public RestResponse<UserProfileDto> getProfile(@PathVariable("userId") long userId) {
         User user = userService.findUserById(userId);
         UserProfileDto dto = UserProfileDto.builder()
@@ -48,7 +48,7 @@ public class UserController implements ApiRouteConstants {
     }
 
     @PostMapping(API_USER_PROFILE + API_USER_FOLLOW)
-    @ResponseBody
+    @ApiOperation("关注用户")
     public RestResponse<Void> follow(@PathVariable("userId") long userId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userService.hasFollowed(principal.getId(), Entity.USER, userId)) {
@@ -60,7 +60,7 @@ public class UserController implements ApiRouteConstants {
     }
 
     @GetMapping(API_USER_PROFILE + API_USER_SUBSCRIBERS)
-    @ResponseBody
+    @ApiOperation("获取自己的关注")
     public RestResponse<List<Map<String, Object>>> getSubscribers(@PathVariable("userId") long userId, @PathVariable("curPage") int curPage) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(userId)) {
@@ -70,7 +70,7 @@ public class UserController implements ApiRouteConstants {
         }
     }
 
-    @ResponseBody
+    @ApiOperation("获取自己的粉丝")
     @GetMapping(API_USER_PROFILE + API_USER_FANS)
     public RestResponse<List<Map<String, Object>>> getFans(@PathVariable("userId") long userId, @PathVariable("curPage") int curPage) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -80,16 +80,5 @@ public class UserController implements ApiRouteConstants {
             throw new BusinessException(CommonResultStatus.FORBIDDEN, "只能查看自己的粉丝列表");
         }
     }
-
-    @ResponseBody
-    public RestResponse<List<User>> searchUser(String input) throws IOException {
-        List<?> search = searchService.search(input, User.class);
-        List<User> res = new ArrayList<>();
-        for (var obj : search) {
-            res.add((User) obj);
-        }
-        return RestResponse.ok(res);
-    }
-
 
 }

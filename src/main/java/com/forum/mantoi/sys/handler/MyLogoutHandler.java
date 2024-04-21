@@ -1,5 +1,8 @@
 package com.forum.mantoi.sys.handler;
 
+import com.forum.mantoi.common.response.CommonResultStatus;
+import com.forum.mantoi.common.response.ResultStatus;
+import com.forum.mantoi.sys.exception.AuthException;
 import com.forum.mantoi.utils.JwtUtilities;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +42,7 @@ public class MyLogoutHandler implements LogoutHandler {
             response.sendRedirect("/homePage");
         } catch (IOException e) {
             log.info("response发送重定向抛出IOException");
-            throw new RuntimeException(e);
+            throw new AuthException(CommonResultStatus.SERVER_ERROR, CommonResultStatus.SERVER_ERROR.getMsg());
         }
     }
 }

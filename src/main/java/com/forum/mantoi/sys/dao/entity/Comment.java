@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,7 +13,7 @@ import java.util.Date;
 @TableName(value = "t_comment")
 @Data
 @Builder
-public class Comment {
+public class Comment implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

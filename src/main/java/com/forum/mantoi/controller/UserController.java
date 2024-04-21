@@ -7,17 +7,13 @@ import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.sys.services.SearchService;
 import com.forum.mantoi.sys.services.UserService;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.apiguardian.api.API;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,12 +22,13 @@ import java.util.Map;
  */
 @RestController
 @AllArgsConstructor
+@Tag(name = "用户相关api")
 public class UserController implements ApiRouteConstants {
 
     private final UserService userService;
 
     @GetMapping(API_USER_PROFILE)
-    @ApiOperation("获取用户相关信息")
+    @Operation(summary = "获取用户相关信息")
     public RestResponse<UserProfileDto> getProfile(@PathVariable("userId") long userId) {
         User user = userService.findUserById(userId);
         UserProfileDto dto = UserProfileDto.builder()
@@ -48,7 +45,7 @@ public class UserController implements ApiRouteConstants {
     }
 
     @PostMapping(API_USER_PROFILE + API_USER_FOLLOW)
-    @ApiOperation("关注用户")
+    @Operation(summary = "关注用户")
     public RestResponse<Void> follow(@PathVariable("userId") long userId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userService.hasFollowed(principal.getId(), Entity.USER, userId)) {
@@ -60,7 +57,7 @@ public class UserController implements ApiRouteConstants {
     }
 
     @GetMapping(API_USER_PROFILE + API_USER_SUBSCRIBERS)
-    @ApiOperation("获取自己的关注")
+    @Operation(summary = "获取自己的关注")
     public RestResponse<List<Map<String, Object>>> getSubscribers(@PathVariable("userId") long userId, @PathVariable("curPage") int curPage) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal.getId().equals(userId)) {
@@ -70,7 +67,7 @@ public class UserController implements ApiRouteConstants {
         }
     }
 
-    @ApiOperation("获取自己的粉丝")
+    @Operation(summary = "获取自己的粉丝")
     @GetMapping(API_USER_PROFILE + API_USER_FANS)
     public RestResponse<List<Map<String, Object>>> getFans(@PathVariable("userId") long userId, @PathVariable("curPage") int curPage) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

@@ -11,8 +11,8 @@ import com.forum.mantoi.common.pojo.vo.SmsCaptchaVO;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.services.impl.UserServiceImpl;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @AllArgsConstructor
-@Api(tags = "登录验证接口")
+@Tag(name = "登录验证接口")
 public class AuthController implements ApiRouteConstants {
 
     private final UserServiceImpl userServiceImpl;
@@ -35,13 +35,13 @@ public class AuthController implements ApiRouteConstants {
     private final StringRedisTemplate redisTemplate;
 
     @PostMapping(API_AUTH_PREFIX + API_REGISTER)
-    @ApiOperation(value = "用户登录")
+    @Operation(summary = "用户登录")
     public RestResponse<RegisterResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return userServiceImpl.register(registerRequestDto);
     }
 
     @GetMapping(API_AUTH_PREFIX + API_CAPTCHA)
-    @ApiOperation(value = "生成登录验证码")
+    @Operation(summary = "生成登录验证码")
     public RestResponse<CaptchaVO> generateCaptcha() {
         LineCaptcha captcha = CaptchaUtil.createLineCaptcha(200, 100);
         String code = captcha.getCode();
@@ -57,7 +57,7 @@ public class AuthController implements ApiRouteConstants {
     }
 
     @PostMapping(API_AUTH_PREFIX + API_SMS)
-    @ApiOperation(value = "短信验证码")
+    @Operation(summary = "短信验证码")
     public RestResponse<SmsCaptchaVO> smsCaptcha(@RequestParam String phone, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(remoteAddr))) {

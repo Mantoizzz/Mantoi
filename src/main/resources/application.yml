@@ -29,3 +29,7 @@ mybatis-plus:
 logging:
   level:
     root: info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

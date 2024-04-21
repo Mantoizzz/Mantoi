@@ -13,8 +13,8 @@ import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.sys.services.*;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -29,7 +29,7 @@ import java.util.*;
  */
 @AllArgsConstructor
 @RestController
-@Api(tags = "跟帖子相关的API")
+@Tag(name = "跟帖子相关的API")
 public class PostController implements ApiRouteConstants {
 
     private final PostService postService;
@@ -42,7 +42,7 @@ public class PostController implements ApiRouteConstants {
 
     @PostMapping(API_POST_PREFIX + API_ADD)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
-    @ApiOperation(value = "添加Post")
+    @Operation(summary = "添加Post")
     public RestResponse<Void> addPost(@RequestBody PublishPostDto dto) throws IOException {
         SysUser user = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         dto.setAuthor(userService.convert(user));
@@ -51,7 +51,7 @@ public class PostController implements ApiRouteConstants {
 
 
     @GetMapping(API_POST_PREFIX + API_POST_LOAD_MORE)
-    @ApiOperation(value = "加载更多帖子")
+    @Operation(summary = "加载更多帖子")
     public RestResponse<Page<Post>> loadMore(@RequestParam(value = "page", defaultValue = "1") int page
             , @RequestParam(value = "size", defaultValue = "10") int size) {
         Page<Post> posts = postService.findPosts(size, page);
@@ -66,7 +66,7 @@ public class PostController implements ApiRouteConstants {
      * @return URL
      */
     @GetMapping(API_POST_PREFIX + API_POST_DETAIL)
-    @ApiOperation("获取帖子信息")
+    @Operation(summary = "获取帖子信息")
     public RestResponse<PostDetailResponse> getPostDetail(@PathVariable("postId") long postId, @PathVariable("page") int curPage) {
         Post post = postService.findById(postId);
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -117,13 +117,13 @@ public class PostController implements ApiRouteConstants {
 
     @DeleteMapping(API_POST_PREFIX + API_POST_DELETE)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
-    @ApiOperation("删除帖子api")
+    @Operation(summary = "删除帖子api")
     public RestResponse<Void> delete(@PathVariable("postId") long postId) {
         SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return postService.delete(new DeletePostDto(postId, principal.getId()));
     }
 
-    @ApiOperation("添加评论")
+    @Operation(summary = "添加评论")
     @PostMapping(API_POST_PREFIX + API_POST_ADD_COMMENT)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addComment(@PathVariable("postId") long postId, @RequestBody PublishCommentDto dto) {
@@ -140,7 +140,7 @@ public class PostController implements ApiRouteConstants {
 
     @PostMapping(API_POST_PREFIX + API_POST_ADD_REPLY)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
-    @ApiOperation("添加回复")
+    @Operation(summary = "添加回复")
     public RestResponse<Void> addReply(@PathVariable long commentId, @RequestBody PublishCommentDto dto) {
         SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = Comment.builder()

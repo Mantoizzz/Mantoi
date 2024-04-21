@@ -31,7 +31,9 @@ public class MyLogoutHandler implements LogoutHandler {
         String username = authentication.getName();
         //由于token不多，所以采用为每个黑名单键设置一个key的策略
         int expiration = 7;
-        redisTemplate.opsForValue().set(RedisKeys.getBlackListTokenKey(username), token, expiration, TimeUnit.DAYS);
+        if (token != null) {
+            redisTemplate.opsForValue().set(RedisKeys.getBlackListTokenKey(username), token, expiration, TimeUnit.DAYS);
+        }
         SecurityContextHolder.clearContext();
         try {
             response.sendRedirect("/homePage");

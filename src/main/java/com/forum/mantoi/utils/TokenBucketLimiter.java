@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author DELL
  */
-public class TokenBucketLimiter {
+public final class TokenBucketLimiter {
 
     private final long maxTokens;
 

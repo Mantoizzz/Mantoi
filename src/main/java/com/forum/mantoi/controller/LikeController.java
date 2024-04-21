@@ -28,7 +28,6 @@ public class LikeController implements ApiRouteConstants {
 
     @PostMapping(API_LIKE)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
-    @ResponseBody
     public RestResponse<Void> like(Entity entity, long id, long userId) {
         likeService.addLike(userId, id, entity);
         return RestResponse.ok();

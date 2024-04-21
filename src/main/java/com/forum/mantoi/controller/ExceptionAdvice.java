@@ -22,13 +22,13 @@ public class ExceptionAdvice {
 
     @ExceptionHandler({Exception.class})
     public void handleException(Exception e, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("Server Error:" + e.getMessage());
+        log.info("Server Error:{}", e.getMessage());
         for (StackTraceElement element : e.getStackTrace()) {
             log.error(element.toString());
         }
 
         String xRequestedWith = request.getHeader("x-requested-with");
-        if (xRequestedWith.equals("XMLHttpRequest")) {
+        if ("XMLHttpRequest".equals(xRequestedWith)) {
             response.setContentType("application/plain;charset=utf-8");
             PrintWriter writer = response.getWriter();
             writer.write(CommunityUtil.getJsonString(CommonResultStatus.SERVER_ERROR));

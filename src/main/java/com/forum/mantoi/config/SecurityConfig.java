@@ -34,25 +34,6 @@ public class SecurityConfig implements ApiRouteConstants {
                 config.requestMatchers(API_AUTH_PREFIX + API_ALL).permitAll()
         );
 
-//        http.formLogin(config -> {
-//                    try {
-//                        config
-//                                .usernameParameter(Constants.EMAIL)
-//                                .passwordParameter(Constants.PASSWORD)
-//                                .loginPage(ApiRouteConstants.API_LOGIN_URL)
-//                                .loginProcessingUrl(ApiRouteConstants.API_LOGIN_URL)
-//                                .successHandler(jwtAuthenticationSuccessHandler);
-//                    } catch (Exception e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-//        );
-
-//        http.apply(SmsLoginConfigurer.smsLogin())
-//                .successHandler(jwtAuthenticationSuccessHandler).failureHandler(failureHandler)
-//                .phoneParameter("phone")
-//                .smsCodeParameter("smsCode")
-//                .configure(http.authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class))));
 
         http.logout(config -> config
                 .logoutUrl(ApiRouteConstants.API_LOGOUT_URL)

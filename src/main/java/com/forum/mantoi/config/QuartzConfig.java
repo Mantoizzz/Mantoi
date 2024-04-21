@@ -11,11 +11,13 @@ import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
 
 /**
  * Quartz配置文件
+ *
+ * @author DELL
  */
 @Configuration
 public class QuartzConfig {
 
-    private final String COMMUNITY_GROUP = "CommunityGroup";
+    private static final String COMMUNITY_GROUP = "CommunityGroup";
 
 
     @Bean(name = "scoreRefreshJobDetail")

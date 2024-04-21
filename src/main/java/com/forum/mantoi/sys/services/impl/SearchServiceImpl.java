@@ -22,13 +22,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Service
+/**
+ * @author DELL
+ */
 @AllArgsConstructor
+@Service
 public class SearchServiceImpl implements SearchService {
 
     private final UserMapper userMapper;
 
-    private final InvertIndexRepository repository;
+    private final InvertIndexRepository invertRepo;
 
     private final PostMapper postMapper;
 
@@ -53,7 +56,7 @@ public class SearchServiceImpl implements SearchService {
             if (SearchTextUtils.HIGH_FREQUENCY_WORDS.contains(word)) {
                 redisTemplate.opsForValue().setBit(word, post.getId(), true);
             } else {
-                InvertIndex index = repository.findInvertIndexByKeyword(word);
+                InvertIndex index = invertRepo.findInvertIndexByKeyword(word);
                 long[] documents = index.getDocuments();
                 long postId = post.getId();
                 if (postId >= documents.length * 64L) {
@@ -64,7 +67,7 @@ public class SearchServiceImpl implements SearchService {
                 } else {
                     index.setDocuments(SearchTextUtils.process(postId, documents));
                 }
-                repository.insert(index);
+                invertRepo.insert(index);
             }
         }
     }
@@ -87,7 +90,7 @@ public class SearchServiceImpl implements SearchService {
                     }
                 }
             } else {
-                InvertIndex index = repository.findInvertIndexByKeyword(str);
+                InvertIndex index = invertRepo.findInvertIndexByKeyword(str);
                 long[] documents = index.getDocuments();
                 for (long l : documents) {
                     for (int j = 0; j < 64; j++) {

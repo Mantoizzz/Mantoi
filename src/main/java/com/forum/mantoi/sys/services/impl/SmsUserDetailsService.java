@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author DELL
  */
 @AllArgsConstructor
-@Service
+@Service("smsUserDetailsService")
 @Slf4j
 public class SmsUserDetailsService implements UserDetailsService {
 

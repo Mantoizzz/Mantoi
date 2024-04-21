@@ -9,5 +9,4 @@ public interface InvertIndexRepository extends MongoRepository<InvertIndex, Stri
 
     InvertIndex findInvertIndexByKeyword(String keyWord);
 
-
 }

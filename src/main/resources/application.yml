@@ -10,11 +10,6 @@ spring:
       port: 6379
     mongodb:
       uri: mongodb://localhost:27017/Mantoi
-  elasticsearch:
-
-    username: elastic
-    password: VP=CbKpMr3zJ2jtAl4PG
-    uris: https://localhost:9200
   cache:
     cache-names: cache
     caffeine:
@@ -29,3 +24,8 @@ jwt:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# Logging
+logging:
+  level:
+    root: info

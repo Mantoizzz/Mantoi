@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
  *
  * @author DELL
  */
-@Service
+@Service("likeService")
 @AllArgsConstructor
 public class LikeServiceImpl implements LikeService {
 

@@ -1,6 +1,5 @@
 package com.forum.mantoi.sys.services.impl;
 
-import cn.hutool.core.io.resource.ClassPathResource;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
@@ -21,18 +20,19 @@ import com.forum.mantoi.sys.services.SearchService;
 import com.forum.mantoi.utils.TokenBucketLimiter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
 
 /**
  * @author DELL
  */
-@Service
+@Service("postService")
+@AllArgsConstructor
 @Slf4j
 public class PostServiceImpl implements PostService {
 
@@ -48,14 +48,6 @@ public class PostServiceImpl implements PostService {
 
     private final TokenBucketLimiter limiter;
 
-    public PostServiceImpl(PostMapper postMapper, UserMapper userMapper, CommentMapper commentMapper, PostContentMapper postContentMapper, SearchService searchService) {
-        this.postMapper = postMapper;
-        this.userMapper = userMapper;
-        this.commentMapper = commentMapper;
-        this.postContentMapper = postContentMapper;
-        this.searchService = searchService;
-        this.limiter = new TokenBucketLimiter(10, 10);
-    }
 
     @Override
     public RestResponse<Void> publish(PublishPostDto dto) throws IOException {

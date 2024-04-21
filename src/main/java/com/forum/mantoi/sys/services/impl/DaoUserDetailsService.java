@@ -20,7 +20,7 @@ import java.util.Objects;
  * @author DELL
  */
 @AllArgsConstructor
-@Service
+@Service("daoUserDetailsService")
 @Slf4j
 public class DaoUserDetailsService implements UserDetailsService {
 

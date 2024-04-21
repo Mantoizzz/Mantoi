@@ -16,7 +16,6 @@ import com.forum.mantoi.sys.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,7 +38,6 @@ public class PostController implements ApiRouteConstants {
     private final UserService userService;
 
     private final SearchService searchService;
-
 
     @PostMapping(API_POST_PREFIX + API_ADD)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
@@ -74,9 +72,6 @@ public class PostController implements ApiRouteConstants {
         boolean isLiked = curUser != null && likeService.isLiked(Entity.POST, postId, curUser.getId());
         long likes = likeService.viewLikes(Entity.POST, postId);
         List<Comment> comments = commentService.findComments(post);
-        int pageSize = 10;
-        int start = Math.max(0, curPage * pageSize);
-        int end = Math.min(start + pageSize, comments.size());
         List<Map<String, Object>> commentVOList = new ArrayList<>();
         if (!comments.isEmpty()) {
             for (Comment comment : comments) {
@@ -126,7 +121,6 @@ public class PostController implements ApiRouteConstants {
 
 
     @PostMapping(API_POST_PREFIX + API_POST_ADD_COMMENT)
-    @ResponseBody
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addComment(@PathVariable("postId") long postId, @RequestBody PublishCommentDto dto) {
         SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -141,7 +135,6 @@ public class PostController implements ApiRouteConstants {
     }
 
     @PostMapping(API_POST_PREFIX + API_POST_ADD_REPLY)
-    @ResponseBody
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<Void> addReply(@PathVariable long commentId, @RequestBody PublishCommentDto dto) {
         SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -155,7 +148,6 @@ public class PostController implements ApiRouteConstants {
         return commentService.save(comment);
     }
 
-    @ResponseBody
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     public RestResponse<List<Post>> searchPost(String input) throws IOException {
         List<?> search = searchService.search(input, Post.class);

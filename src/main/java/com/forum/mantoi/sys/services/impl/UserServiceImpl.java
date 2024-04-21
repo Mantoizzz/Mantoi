@@ -35,7 +35,7 @@ import java.util.*;
 /**
  * @author DELL
  */
-@Service
+@Service("userService")
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {

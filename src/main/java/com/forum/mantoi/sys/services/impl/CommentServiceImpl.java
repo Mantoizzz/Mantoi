@@ -18,7 +18,7 @@ import java.util.Objects;
 /**
  * @author DELL
  */
-@Service
+@Service("commentService")
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
 

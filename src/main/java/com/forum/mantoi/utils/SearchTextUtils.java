@@ -49,19 +49,20 @@ public class SearchTextUtils {
 
     private static Set<String> tokenizationString(String text) throws IOException {
         CharArraySet charArraySet = new CharArraySet(STOP, true);
-        Analyzer analyzer = new SmartChineseAnalyzer(charArraySet);
-        StringReader stringReader = new StringReader(optimizeText(text));
-        TokenStream tokenStream = analyzer.tokenStream("分词", stringReader);
-        CharTermAttribute attribute = tokenStream.addAttribute(CharTermAttribute.class);
 
-        Set<String> set = new HashSet<>();
-        tokenStream.reset();
-        while (tokenStream.incrementToken()) {
-            set.add(attribute.toString());
+        try (Analyzer analyzer = new SmartChineseAnalyzer(charArraySet)) {
+            StringReader stringReader = new StringReader(optimizeText(text));
+            TokenStream tokenStream = analyzer.tokenStream("分词", stringReader);
+            CharTermAttribute attribute = tokenStream.addAttribute(CharTermAttribute.class);
+
+            Set<String> set = new HashSet<>();
+            tokenStream.reset();
+            while (tokenStream.incrementToken()) {
+                set.add(attribute.toString());
+            }
+            tokenStream.close();
+            return set;
         }
-        tokenStream.close();
-        analyzer.close();
-        return set;
     }
 
     public static Set<String> tokenizationPost(Post post, PostContent content) throws IOException {

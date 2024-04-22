@@ -3,6 +3,7 @@ package com.forum.mantoi.controller;
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.core.util.RandomUtil;
+import com.forum.mantoi.common.annotation.AccessInterceptor;
 import com.forum.mantoi.common.constant.ApiRouteConstants;
 import com.forum.mantoi.common.pojo.dto.request.RegisterRequestDto;
 import com.forum.mantoi.common.pojo.dto.response.RegisterResponseDto;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,7 @@ import java.util.concurrent.TimeUnit;
  */
 @RestController
 @AllArgsConstructor
+@Slf4j
 @Tag(name = "登录验证接口")
 public class AuthController implements ApiRouteConstants {
 
@@ -58,6 +61,7 @@ public class AuthController implements ApiRouteConstants {
 
     @PostMapping(API_AUTH_PREFIX + API_SMS)
     @Operation(summary = "短信验证码")
+    @AccessInterceptor(key = "phone", permitsPerSecond = 0.1, blackListCount = 3, fallbackMethod = "rateLimitError")
     public RestResponse<SmsCaptchaVO> smsCaptcha(@RequestParam String phone, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(remoteAddr))) {
@@ -69,8 +73,21 @@ public class AuthController implements ApiRouteConstants {
         captchaVO.setPhone(phone);
         captchaVO.setExpire(5);
         redisTemplate.opsForValue().set(remoteAddr, RandomUtil.randomString(3), 1, TimeUnit.MINUTES);
-        //TODO 发短信的Service
+        //发短信的Service不打算写了，因为比较麻烦
         return RestResponse.ok(captchaVO);
+    }
+
+    /**
+     * 短信验证fallback函数
+     *
+     * @param phone   电话号码
+     * @param request HttpRequest
+     * @return RestResponse
+     */
+    @Operation(summary = "fallback函数")
+    public RestResponse<Void> rateLimitError(@RequestParam String phone, HttpServletRequest request) {
+        log.info("RateLimitError:{},Request:{}", phone, request.toString());
+        return RestResponse.fail(CommonResultStatus.TOO_MANY_REQUEST);
     }
 
 

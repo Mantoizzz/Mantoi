@@ -1,5 +1,6 @@
 package com.forum.mantoi.controller;
 
+import com.forum.mantoi.common.annotation.AccessInterceptor;
 import com.forum.mantoi.common.constant.ApiRouteConstants;
 import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.common.pojo.dto.response.UserProfileDto;
@@ -46,6 +47,7 @@ public class UserController implements ApiRouteConstants {
 
     @PostMapping(API_USER_PROFILE + API_USER_FOLLOW)
     @Operation(summary = "关注用户")
+    @AccessInterceptor(key = "userId", permitsPerSecond = 1, blackListCount = 20, fallbackMethod = "followRateLimiterError")
     public RestResponse<Void> follow(@PathVariable("userId") long userId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userService.hasFollowed(principal.getId(), Entity.USER, userId)) {
@@ -54,6 +56,11 @@ public class UserController implements ApiRouteConstants {
             userService.follow(principal.getId(), Entity.USER, userId);
         }
         return RestResponse.ok();
+    }
+
+    @Operation(summary = "关注用户限流fallback函数")
+    public RestResponse<Void> followRateLimiterError(@PathVariable("userId") long userId) {
+        return RestResponse.fail(CommonResultStatus.TOO_MANY_REQUEST);
     }
 
     @GetMapping(API_USER_PROFILE + API_USER_SUBSCRIBERS)

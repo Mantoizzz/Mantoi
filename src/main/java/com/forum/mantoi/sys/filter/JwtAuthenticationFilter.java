@@ -6,7 +6,7 @@ import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.SysUser;
-import com.forum.mantoi.utils.JwtUtilities;
+import com.forum.mantoi.utils.JwtUtils;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -41,8 +41,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(Constants.JWT_HEADER);
 
-        if (token != null && JwtUtilities.validateToken(token)) {
-            String email = JwtUtilities.extractEmail(token);
+        if (token != null && JwtUtils.validateToken(token)) {
+            String email = JwtUtils.extractEmail(token);
 
             User user = userMapper.findByEmail(email);
             if (Objects.isNull(user)) {

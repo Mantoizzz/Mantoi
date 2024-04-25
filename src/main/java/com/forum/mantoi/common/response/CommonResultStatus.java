@@ -25,7 +25,9 @@ public enum CommonResultStatus implements ResultStatus {
 
     NULL(1006, "值不可以为空"),
 
-    TOO_MANY_REQUEST(1007, "请稍后重试");
+    TOO_MANY_REQUEST(1007, "请稍后重试"),
+
+    OPERATION_NOT_SUPPORT(1008, "该操作暂时不支持");
 
     private final int code;
 
@@ -40,4 +42,4 @@ public enum CommonResultStatus implements ResultStatus {
     public String getMsg() {
         return msg;
     }
-}
+    }

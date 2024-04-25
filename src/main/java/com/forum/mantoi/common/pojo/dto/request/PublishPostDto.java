@@ -4,6 +4,7 @@ import com.forum.mantoi.sys.dao.entity.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -11,14 +12,16 @@ import java.util.Date;
  */
 
 @Data
-public class PublishPostDto {
+public class PublishPostDto implements Serializable {
 
-    public String content;
+    private String content;
 
-    public User author;
+    private String shortContent;
 
-    public Date publishTime;
+    private User author;
 
-    public String title;
+    private Date publishTime;
+
+    private String title;
 
 }

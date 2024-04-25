@@ -5,10 +5,8 @@ import com.forum.mantoi.common.constant.Constants;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.time.Instant;
@@ -21,17 +19,15 @@ import java.util.function.Function;
  * @author DELL
  */
 @Slf4j
-public final class JwtUtilities {
+public final class JwtUtils {
 
-    private JwtUtilities() {
+    private JwtUtils() {
 
     }
 
-    @Value("${jwt.secret}")
-    private static String secret;
+    private static final String SECRET = "xyq0320";
 
-    @Value("${jwt.expiration}")
-    private static Long jwtExpiration;
+    private static final Long JWT_EXPIRATION = 7L;
 
 
     public static String extractEmail(String token) {
@@ -39,7 +35,7 @@ public final class JwtUtilities {
     }
 
     public static Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
     }
 
     public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -62,13 +58,13 @@ public final class JwtUtilities {
 
     public static String generateToken(String email, Collection<? extends GrantedAuthority> roles) {
         return Jwts.builder().setSubject(email).claim("role", roles).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(Date.from(Instant.now().plus(jwtExpiration, TimeUnit.DAYS.toChronoUnit())))
-                .signWith(SignatureAlgorithm.HS256, secret).compact();
+                .setExpiration(Date.from(Instant.now().plus(JWT_EXPIRATION, TimeUnit.DAYS.toChronoUnit())))
+                .signWith(SignatureAlgorithm.HS256, SECRET).compact();
     }
 
     public static boolean validateToken(String token) {
         try {
-            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
             return true;
         } catch (SignatureException e) {
             log.info("Invalid JWT signature.");

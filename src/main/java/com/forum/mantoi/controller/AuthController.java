@@ -38,7 +38,7 @@ public class AuthController implements ApiRouteConstants {
     private final StringRedisTemplate redisTemplate;
 
     @PostMapping(API_AUTH_PREFIX + API_REGISTER)
-    @Operation(summary = "用户登录")
+    @Operation(summary = "用户注册")
     public RestResponse<RegisterResponseDto> register(@RequestBody RegisterRequestDto registerRequestDto) {
         return userServiceImpl.register(registerRequestDto);
     }
@@ -62,7 +62,7 @@ public class AuthController implements ApiRouteConstants {
     @PostMapping(API_AUTH_PREFIX + API_SMS)
     @Operation(summary = "短信验证码")
     @AccessInterceptor(key = "phone", permitsPerSecond = 0.1, blackListCount = 3, fallbackMethod = "rateLimitError")
-    public RestResponse<SmsCaptchaVO> smsCaptcha(@RequestParam String phone, HttpServletRequest request) {
+    public RestResponse<Void> smsCaptcha(@RequestParam String phone, HttpServletRequest request) {
         String remoteAddr = request.getRemoteAddr();
         if (Boolean.TRUE.equals(redisTemplate.hasKey(remoteAddr))) {
             RestResponse.fail(null, CommonResultStatus.TOO_MANY_REQUEST);
@@ -73,8 +73,9 @@ public class AuthController implements ApiRouteConstants {
         captchaVO.setPhone(phone);
         captchaVO.setExpire(5);
         redisTemplate.opsForValue().set(remoteAddr, RandomUtil.randomString(3), 1, TimeUnit.MINUTES);
-        //发短信的Service不打算写了，因为比较麻烦
-        return RestResponse.ok(captchaVO);
+        //发短信的Service不打算写了,因此返回为fail
+
+        return RestResponse.fail(CommonResultStatus.OPERATION_NOT_SUPPORT);
     }
 
     /**

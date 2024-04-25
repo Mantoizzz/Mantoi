@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -35,6 +36,8 @@ public class SearchServiceImpl implements SearchService {
 
     private final StringRedisTemplate redisTemplate;
 
+    private final int BITMAP_LIMIT = 10;
+
     @Override
     public void saveDocument(Post post, PostContent content) throws IOException {
         Set<String> set = SearchTextUtils.tokenizationPost(post, content);
@@ -43,6 +46,12 @@ public class SearchServiceImpl implements SearchService {
                 redisTemplate.opsForValue().setBit(word, post.getId(), true);
             } else {
                 InvertIndex index = invertRepo.findInvertIndexByKeyword(word);
+                if (Objects.isNull(index)) {
+                    index = new InvertIndex();
+                    index.setKeyword(word);
+                    index.setDocuments(new long[BITMAP_LIMIT]);
+                    invertRepo.save(index);
+                }
                 long[] documents = index.getDocuments();
                 long postId = post.getId();
                 if (postId >= documents.length * 64L) {

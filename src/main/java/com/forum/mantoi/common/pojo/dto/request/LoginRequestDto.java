@@ -8,8 +8,10 @@ import java.io.Serializable;
  * @author DELL
  */
 @Data
-public class MessageRequest implements Serializable {
+public class LoginRequestDto implements Serializable {
 
-    private String content;
+    private String username;
+
+    private String password;
 
 }

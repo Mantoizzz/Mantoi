@@ -1,9 +1,8 @@
 package com.forum.mantoi.sys.handler;
 
 import com.forum.mantoi.common.response.CommonResultStatus;
-import com.forum.mantoi.common.response.ResultStatus;
 import com.forum.mantoi.sys.exception.AuthException;
-import com.forum.mantoi.utils.JwtUtilities;
+import com.forum.mantoi.utils.JwtUtils;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +29,7 @@ public class MyLogoutHandler implements LogoutHandler {
 
     @Override
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        String token = JwtUtilities.getToken(request);
+        String token = JwtUtils.getToken(request);
         String username = authentication.getName();
         //由于token不多，所以采用为每个黑名单键设置一个key的策略
         int expiration = 7;

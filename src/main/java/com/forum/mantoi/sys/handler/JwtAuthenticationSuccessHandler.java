@@ -6,7 +6,7 @@ import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.dao.mapper.UserMapper;
 import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.SysUser;
-import com.forum.mantoi.utils.JwtUtilities;
+import com.forum.mantoi.utils.JwtUtils;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -41,7 +41,7 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
             throw new UserException(CommonResultStatus.RECORD_NOT_EXIST, CommonResultStatus.RECORD_NOT_EXIST.getMsg());
         }
         SysUser sysUser = new SysUser(user);
-        String token = JwtUtilities.generateToken(user.getEmail(), sysUser.getAuthorities());
+        String token = JwtUtils.generateToken(user.getEmail(), sysUser.getAuthorities());
         //删除Redis中的黑名单key
         String key = RedisKeys.getBlackListTokenKey(user.getUsername());
         if (Boolean.TRUE.equals(redisTemplate.hasKey(key))) {

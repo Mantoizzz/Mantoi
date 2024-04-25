@@ -8,6 +8,7 @@ import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;
 import java.util.List;
@@ -25,7 +26,7 @@ public interface PostService {
 
     List<Post> getTopPosts();
 
-    Page<Post> findPosts(int size, int page);
+    Page<Post> findPosts(int size, int page, HttpServletRequest request);
 
     void updateScore(Long postId, double score);
 
@@ -34,5 +35,7 @@ public interface PostService {
     List<Comment> getComments(Post post);
 
     PostContent getContent(Post post);
+
+    Post getPost(long postId);
 
 }

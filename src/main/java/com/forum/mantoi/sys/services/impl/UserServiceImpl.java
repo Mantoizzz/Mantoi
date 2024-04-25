@@ -18,7 +18,7 @@ import com.forum.mantoi.sys.exception.UserException;
 import com.forum.mantoi.sys.model.Role;
 import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.sys.services.UserService;
-import com.forum.mantoi.utils.JwtUtilities;
+import com.forum.mantoi.utils.JwtUtils;
 import com.forum.mantoi.utils.RedisKeys;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         userMapper.insert(user);
 
         return RestResponse.ok(RegisterResponseDto.builder()
-                .token(JwtUtilities.generateToken(dto.getEmail(), Role.USER.getAuthorities()))
+                .token(JwtUtils.generateToken(dto.getEmail(), Role.USER.getAuthorities()))
                 .build());
     }
 

@@ -16,9 +16,6 @@ spring:
       spec: initialCapacity=50,maximumSize=500,expireAfterWrite=10m
     type: caffeine
 
-jwt:
-  secret: xyq0320
-  expiration: 7
 
 # mybatis-plus
 mybatis-plus:

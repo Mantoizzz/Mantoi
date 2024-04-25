@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.services.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.forum.mantoi.common.annotation.AccessInterceptor;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
 import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.CommonResultStatus;
@@ -18,9 +19,9 @@ import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.PostService;
 import com.forum.mantoi.sys.services.SearchService;
 import com.forum.mantoi.utils.TokenBucketLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -48,13 +49,12 @@ public class PostServiceImpl implements PostService {
 
     private final TokenBucketLimiter limiter;
 
-
     @Override
     public RestResponse<Void> publish(PublishPostDto dto) throws IOException {
         Post post = Post.builder()
                 .authorId(dto.getAuthor().getId())
                 .title(dto.getTitle())
-                .shortContent(dto.content.substring(0, 25))
+                .shortContent(dto.getContent().substring(0, 25))
                 .likes(0)
                 .score(0D)
                 .build();
@@ -90,12 +90,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<Post> findPosts(int size, int page) {
-        if (!limiter.tryAcquire()) {
-            throw new BusinessException(CommonResultStatus.TOO_MANY_REQUEST, CommonResultStatus.TOO_MANY_REQUEST.getMsg());
-        }
-        Page<Post> postPage = PageDTO.of(page, size);
-        return postMapper.selectPage(postPage, null);
+    public Page<Post> findPosts(int size, int page, HttpServletRequest request) {
+        return selectPosts(size, page, request.getRemoteAddr());
     }
 
     @Override
@@ -125,5 +121,24 @@ public class PostServiceImpl implements PostService {
         return postContentMapper.getContentByPost(post.getId());
     }
 
+    @Override
+    public Post getPost(long postId) {
+        Post post = postMapper.selectById(postId);
+        if (Objects.isNull(post)) {
+            return null;
+        }
+        return post;
+    }
+
+    @AccessInterceptor(key = "remoteAddr", blackListCount = 5, fallbackMethod = "fallback")
+    private Page<Post> selectPosts(int size, int page, String remoteAddr) {
+        Page<Post> postPage = PageDTO.of(page, size);
+        return postMapper.selectPage(postPage, null);
+    }
+
+
+    private RestResponse<Void> fallback(int size, int page, String remoteAddr) {
+        return RestResponse.fail(CommonResultStatus.TOO_MANY_REQUEST);
+    }
 
 }

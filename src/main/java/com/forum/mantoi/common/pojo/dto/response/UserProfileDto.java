@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @Builder
-public class UserProfileDto {
+public class UserProfileDto implements Serializable {
 
     String avatar;
 

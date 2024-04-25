@@ -1,5 +1,6 @@
 package com.forum.mantoi.controller;
 
+import co.elastic.clients.elasticsearch.nodes.Http;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forum.mantoi.common.constant.ApiRouteConstants;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
@@ -15,6 +16,7 @@ import com.forum.mantoi.sys.model.SysUser;
 import com.forum.mantoi.sys.services.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -53,8 +55,9 @@ public class PostController implements ApiRouteConstants {
     @GetMapping(API_POST_PREFIX + API_POST_LOAD_MORE)
     @Operation(summary = "加载更多帖子")
     public RestResponse<Page<Post>> loadMore(@RequestParam(value = "page", defaultValue = "1") int page
-            , @RequestParam(value = "size", defaultValue = "10") int size) {
-        Page<Post> posts = postService.findPosts(size, page);
+            , @RequestParam(value = "size", defaultValue = "10") int size
+            , HttpServletRequest request) {
+        Page<Post> posts = postService.findPosts(size, page, request);
         return RestResponse.ok(posts);
     }
 

@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @author DELL
  */
 @Data
-public class RegisterRequestDto {
+public class RegisterRequestDto implements Serializable {
 
     @NotBlank(message = "昵称不为空")
     public String username;

@@ -2,13 +2,15 @@ package com.forum.mantoi.common.response;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * 封装逻辑类
  *
  * @author DELL
  */
 @Data
-public class RestResponse<T> {
+public class RestResponse<T> implements Serializable {
 
     private final ResultStatus resultStatus;
 

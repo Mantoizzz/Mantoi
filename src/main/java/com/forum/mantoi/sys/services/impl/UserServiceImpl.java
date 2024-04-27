@@ -35,7 +35,7 @@ import java.util.*;
 /**
  * @author DELL
  */
-@Service("userService")
+@Service
 @Transactional
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+
+    public void login() {
+
+    }
+
     /**
      * Register
      *
@@ -57,7 +62,6 @@ public class UserServiceImpl implements UserService {
      * @return Response
      */
     @Override
-
     public RestResponse<RegisterResponseDto> register(RegisterRequestDto dto) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(DataBaseConstants.UserTable.COLUMN_USERNAME, dto.getUsername())

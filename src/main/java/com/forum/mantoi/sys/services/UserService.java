@@ -19,6 +19,8 @@ public interface UserService {
 
     RestResponse<RegisterResponseDto> register(RegisterRequestDto dto);
 
+
+
     User findUserById(Long id);
 
     long getUserLikes(Long id);

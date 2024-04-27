@@ -14,4 +14,6 @@ public class LoginRequestDto implements Serializable {
 
     private String password;
 
+    private String captcha;
+
 }

@@ -1,5 +1,5 @@
 # Mantoi
-一个基于SpringBoot3+SpringSecurity6+SpringData JPA+Redis+ElasticSearch的仿牛客网求职就业论坛，正在开发中...
+一个基于SpringBoot3+SpringSecurity6+SpringData MongoDB+Redis的仿牛客网求职就业论坛，正在开发中...
 
 正在设想的新功能：
 1. 支持OAuth2登录，并可以通过QQ、微博来登录

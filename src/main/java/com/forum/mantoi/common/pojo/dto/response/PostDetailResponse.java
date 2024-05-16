@@ -1,15 +1,14 @@
 package com.forum.mantoi.common.pojo.dto.response;
 
+import com.forum.mantoi.common.pojo.vo.CommentVO;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
 import com.forum.mantoi.sys.model.SysUser;
 import lombok.Builder;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author DELL
@@ -28,6 +27,6 @@ public class PostDetailResponse implements Serializable {
 
     boolean isLiked;
 
-    List<Map<String, Object>> comments;
+    List<CommentVO> commentVOList;
 
 }

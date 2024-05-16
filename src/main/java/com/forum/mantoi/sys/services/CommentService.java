@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.services;
 
 import com.forum.mantoi.common.pojo.dto.request.DeleteCommentDto;
 import com.forum.mantoi.common.pojo.dto.request.PublishCommentDto;
+import com.forum.mantoi.common.pojo.vo.CommentVO;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
@@ -25,4 +26,6 @@ public interface CommentService {
     List<Comment> findComments(Post post);
 
     List<Comment> findReply(Comment comment);
+
+    List<CommentVO> getPostComments(Post post);
 }

@@ -1,10 +1,11 @@
 package com.forum.mantoi.sys.services.impl;
 
+import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.sys.exception.BusinessException;
-import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.sys.services.LikeService;
 import com.forum.mantoi.utils.RedisKeys;
+import com.forum.mantoi.utils.RedisUtils;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import org.springframework.dao.DataAccessException;
@@ -26,6 +27,8 @@ public class LikeServiceImpl implements LikeService {
 
     /**
      * 给实体点赞
+     * 不仅要在Redis中查找这个实体的点赞Set，看一下自己是否已经点过赞
+     * 还要把点赞事件更新到Redis的hash里面，方便统一地进行批量更新
      *
      * @param userId    点赞人的id
      * @param objId     对象的id
@@ -33,7 +36,6 @@ public class LikeServiceImpl implements LikeService {
      */
     @Override
     public void addLike(long userId, long objId, Entity objEntity) {
-
         redisTemplate.execute(new SessionCallback<>() {
             @Override
             public <K, V> Object execute(@NonNull RedisOperations<K, V> operations) throws DataAccessException {
@@ -46,9 +48,16 @@ public class LikeServiceImpl implements LikeService {
                 if (isLiked) {
                     redisTemplate.opsForSet().remove(entityLikeSetKeyName, userId);
                     redisTemplate.opsForValue().decrement(entityLikeCountKeyName);
+                    if (objEntity == Entity.POST) {
+                        RedisUtils.hdecr(RedisKeys.getRankUpdatedPosts(), objId + ":likes", 1);
+                    }
                 } else {
                     redisTemplate.opsForSet().add(entityLikeSetKeyName, userId);
                     redisTemplate.opsForValue().increment(entityLikeCountKeyName);
+                    if (objEntity == Entity.POST) {
+                        RedisUtils.hincr(RedisKeys.getRankUpdatedPosts(), objId + ":likes", 1);
+                    }
+
                 }
                 return operations.exec();
             }

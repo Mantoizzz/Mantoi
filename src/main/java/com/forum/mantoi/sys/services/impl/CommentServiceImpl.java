@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.services.impl;
 
 import com.forum.mantoi.common.pojo.dto.request.DeleteCommentDto;
 import com.forum.mantoi.common.pojo.dto.request.PublishCommentDto;
+import com.forum.mantoi.common.pojo.vo.CommentVO;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
@@ -9,9 +10,12 @@ import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.mapper.CommentMapper;
 import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.CommentService;
+import com.forum.mantoi.utils.RedisKeys;
+import com.forum.mantoi.utils.RedisUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,6 +28,13 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
 
+    /**
+     * 1.创建Comment类，并更新到数据库
+     * 2.把帖子id放进set里面，表明需要更新
+     *
+     * @param dto DTO
+     * @return RestResponse
+     */
     @Override
     public RestResponse<Void> publish(PublishCommentDto dto) {
         Comment comment = Comment.builder()
@@ -35,6 +46,7 @@ public class CommentServiceImpl implements CommentService {
                 .build();
         commentMapper.insert(comment);
 
+        RedisUtils.hincr(RedisKeys.getRankUpdatedPosts(), dto.getPostId().toString() + ":Comments", 1);
         return RestResponse.ok();
     }
 
@@ -64,9 +76,36 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.selectCommentsByPostId(post.getId());
     }
 
+    /**
+     * 拿到这个评论的回复
+     *
+     * @param comment Comment
+     * @return List of Reply
+     */
     @Override
     public List<Comment> findReply(Comment comment) {
         return commentMapper.selectRepliesByCommentId(comment.getId());
+    }
+
+    /**
+     * 拿到一个帖子的所有Comment和Reply
+     *
+     * @param post post
+     * @return List
+     * @see CommentVO
+     */
+    @Override
+    public List<CommentVO> getPostComments(Post post) {
+        List<CommentVO> resultList = new ArrayList<>();
+        List<Comment> comments = this.findComments(post);
+        for (Comment comment : comments) {
+            List<Comment> replyList = this.findReply(comment);
+            CommentVO commentVO = new CommentVO();
+            commentVO.setParent(comment);
+            commentVO.setReplies(replyList);
+            resultList.add(commentVO);
+        }
+        return resultList;
     }
 
 }

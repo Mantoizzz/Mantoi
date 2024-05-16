@@ -33,6 +33,11 @@ public class RestResponse<T> implements Serializable {
         this.data = data;
     }
 
+    private RestResponse(ResultStatus resultStatus, String message) {
+        this.resultStatus = resultStatus;
+        this.message = message;
+    }
+
     private RestResponse(T data, ResultStatus status, String msg) {
         this.data = data;
         this.resultStatus = status;
@@ -49,6 +54,10 @@ public class RestResponse<T> implements Serializable {
 
     public static RestResponse<Void> fail(ResultStatus resultStatus) {
         return new RestResponse<>(resultStatus);
+    }
+
+    public static RestResponse<Void> fail(ResultStatus resultStatus, String msg) {
+        return new RestResponse<>(resultStatus, msg);
     }
 
     public static RestResponse<Void> error() {

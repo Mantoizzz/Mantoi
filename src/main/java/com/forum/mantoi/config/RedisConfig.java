@@ -13,6 +13,9 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
+/**
+ * @author DELL
+ */
 @Configuration
 @AllArgsConstructor
 public class RedisConfig {

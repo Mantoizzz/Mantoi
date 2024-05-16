@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.dao.entity;
 
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.apache.lucene.util.BitDocIdSet;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;

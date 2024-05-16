@@ -51,5 +51,7 @@ public interface ApiRouteConstants {
 
     String API_POST_ADD_REPLY = "/{postId}/{commentId}/addReply";
 
+    String API_ERROR = "/error";
+
 
 }

@@ -33,6 +33,12 @@ public final class RedisKeys {
 
     private static final String FOLLOWER_PREFIX = "followers:";
 
+    private static final String RANK_SET = "rank_set";
+
+    private static final String DELETED_POSTS = "deletedPosts";
+
+    private static final String RANK_UPDATED_POSTS = "rankUpdatedPosts";
+
     public static String getEntityLikeSetKey(Entity entity, Long id) {
         return ENTITY_LIKE_SET_PREFIX + entity.toString().toLowerCase() + SPLIT + id;
     }
@@ -59,6 +65,18 @@ public final class RedisKeys {
 
     public static String getAllPosts() {
         return ALL_POSTS;
+    }
+
+    public static String getRankSet() {
+        return RANK_SET;
+    }
+
+    public static String getDeletedPosts() {
+        return DELETED_POSTS;
+    }
+
+    public static String getRankUpdatedPosts() {
+        return RANK_UPDATED_POSTS;
     }
 
     /**

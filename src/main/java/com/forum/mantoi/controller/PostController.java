@@ -1,30 +1,33 @@
 package com.forum.mantoi.controller;
 
-import co.elastic.clients.elasticsearch.nodes.Http;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forum.mantoi.common.constant.ApiRouteConstants;
+import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.dto.request.PostInformationDto;
 import com.forum.mantoi.common.pojo.dto.request.PublishCommentDto;
-import com.forum.mantoi.common.pojo.dto.response.PostDetailResponse;
 import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
+import com.forum.mantoi.common.pojo.dto.response.PostDetailResponse;
+import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.User;
-import com.forum.mantoi.common.constant.Entity;
 import com.forum.mantoi.sys.model.SysUser;
-import com.forum.mantoi.sys.services.*;
+import com.forum.mantoi.sys.services.CommentService;
+import com.forum.mantoi.sys.services.LikeService;
+import com.forum.mantoi.sys.services.PostService;
+import com.forum.mantoi.sys.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Objects;
 
 /**
  * @author DELL
@@ -62,58 +65,31 @@ public class PostController implements ApiRouteConstants {
     }
 
     /**
-     * 访问论坛的处理方法
+     * 1.先拿到PostInformationDTO
+     * 2.
      *
-     * @param postId  postId
-     * @param curPage 目前的page数
-     * @return URL
+     * @param postId id
+     * @param page   page
+     * @return RestResponse
      */
+    @Operation(summary = "获取帖子信息api")
     @GetMapping(API_POST_PREFIX + API_POST_DETAIL)
-    @Operation(summary = "获取帖子信息")
-    public RestResponse<PostDetailResponse> getPostDetail(@PathVariable("postId") long postId, @PathVariable("page") int curPage) {
-        Post post = postService.findById(postId);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        SysUser curUser = authentication == null ? null : ((SysUser) authentication.getPrincipal());
-        User author = postService.getAuthor(post);
-        boolean isLiked = curUser != null && likeService.isLiked(Entity.POST, postId, curUser.getId());
-        long likes = likeService.viewLikes(Entity.POST, postId);
-        List<Comment> comments = commentService.findComments(post);
-        List<Map<String, Object>> commentVOList = new ArrayList<>();
-        if (!comments.isEmpty()) {
-            for (Comment comment : comments) {
-                Map<String, Object> map = new HashMap<>();
-                map.put("comment", comment);
-                map.put("author", userService.findUserById(comment.getAuthorId()));
-                map.put("likes", comment.getLikes());
-                boolean commentLiked = curUser != null && likeService.isLiked(Entity.COMMENT, comment.getId(), curUser.getId());
-                map.put("isLiked", commentLiked);
-                List<Comment> replyList = commentService.findReply(comment);
-                List<Map<String, Object>> replyVOList = new ArrayList<>();
-                if (!replyList.isEmpty()) {
-                    for (Comment reply : replyList) {
-                        Map<String, Object> vo = new HashMap<>();
-                        vo.put("reply", reply);
-                        vo.put("replyAuthor", userService.findUserById(reply.getAuthorId()));
-                        long likeCnt = likeService.viewLikes(Entity.COMMENT, reply.getId());
-                        vo.put("likeCnt", likeCnt);
-                        boolean likeStatus = curUser != null && likeService.isLiked(Entity.COMMENT, reply.getId(), curUser.getId());
-                        vo.put("likeStatus", likeStatus);
-                        replyVOList.add(vo);
-                    }
-                }
-                map.put("reply", replyVOList);
-                int commentCount = comments.size();
-                map.put("commentCount", commentCount);
-                commentVOList.add(map);
-            }
+    public RestResponse<PostDetailResponse> getPostDetail(@PathVariable(value = "postId") Long postId, @PathVariable int page) {
+
+        PostInformationDto postDetail = postService.getPostDetail(postId);
+        if (Objects.isNull(postDetail)) {
+            return RestResponse.fail(null, CommonResultStatus.RECORD_NOT_EXIST);
         }
+        SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        boolean liked = likeService.isLiked(Entity.POST, postId, principal.getId());
+        User author = postDetail.getAuthor();
         PostDetailResponse response = PostDetailResponse.builder()
-                .post(post)
-                .likes(likes)
+                .post(postDetail.getPost())
+                .curUser(principal)
                 .author(author)
-                .comments(commentVOList)
-                .curUser(curUser)
-                .isLiked(isLiked)
+                .likes(postDetail.getPost().getLikes())
+                .isLiked(liked)
+                .commentVOList(postDetail.getCommentList())
                 .build();
         return RestResponse.ok(response);
     }
@@ -144,11 +120,11 @@ public class PostController implements ApiRouteConstants {
     @PostMapping(API_POST_PREFIX + API_POST_ADD_REPLY)
     @PreAuthorize(value = "hasAnyRole('USER','ADMIN','VIP')")
     @Operation(summary = "添加回复")
-    public RestResponse<Void> addReply(@PathVariable long commentId, @RequestBody PublishCommentDto dto) {
+    public RestResponse<Void> addReply(@PathVariable long postId, @PathVariable long commentId, @RequestBody PublishCommentDto dto) {
         SysUser principal = (SysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Comment comment = Comment.builder()
                 .authorId(principal.getId())
-                .postId(null)
+                .postId(postId)
                 .parentId(commentId)
                 .content(dto.getContent())
                 .likes(0)

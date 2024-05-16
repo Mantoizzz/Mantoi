@@ -2,6 +2,7 @@ package com.forum.mantoi.sys.services;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.forum.mantoi.common.pojo.dto.request.DeletePostDto;
+import com.forum.mantoi.common.pojo.dto.request.PostInformationDto;
 import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.response.RestResponse;
 import com.forum.mantoi.sys.dao.entity.Comment;
@@ -32,10 +33,9 @@ public interface PostService {
 
     User getAuthor(Post post);
 
-    List<Comment> getComments(Post post);
-
     PostContent getContent(Post post);
 
-    Post getPost(long postId);
+    PostInformationDto getPostFromDatabase(long postId);
 
+    PostInformationDto getPostDetail(long postId);
 }

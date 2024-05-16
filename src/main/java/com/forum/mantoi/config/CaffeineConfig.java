@@ -13,19 +13,18 @@ import java.util.concurrent.TimeUnit;
  * @author DELL
  */
 @Configuration
-public class CaffeineConfiguration {
+public class CaffeineConfig {
 
     @Bean(name = "caffeineCacheManager")
     public Cache<String, Object> localCacheManager() {
-        int expireTime = 10;
+        int expireTime = 2;
         int initialCapacity = 50;
-        int maximumSize = 500;
+        int maximumSize = 200;
         return Caffeine.newBuilder()
-                .expireAfterWrite(expireTime, TimeUnit.MINUTES)
+                .expireAfterWrite(expireTime, TimeUnit.DAYS)
                 .initialCapacity(initialCapacity)
                 .maximumSize(maximumSize)
                 .recordStats()
                 .build();
-
     }
 }

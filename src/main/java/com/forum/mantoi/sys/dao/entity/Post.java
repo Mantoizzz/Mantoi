@@ -39,4 +39,7 @@ public class Post implements Serializable {
     @TableField(value = "score")
     private Double score;
 
+    @TableField(value = "deleted")
+    private boolean deleted;
+
 }

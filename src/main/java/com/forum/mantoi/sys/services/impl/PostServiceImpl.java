@@ -9,7 +9,6 @@ import com.forum.mantoi.common.pojo.dto.request.PublishPostDto;
 import com.forum.mantoi.common.pojo.vo.CommentVO;
 import com.forum.mantoi.common.response.CommonResultStatus;
 import com.forum.mantoi.common.response.RestResponse;
-import com.forum.mantoi.sys.dao.entity.Comment;
 import com.forum.mantoi.sys.dao.entity.Post;
 import com.forum.mantoi.sys.dao.entity.PostContent;
 import com.forum.mantoi.sys.dao.entity.User;
@@ -21,8 +20,8 @@ import com.forum.mantoi.sys.exception.BusinessException;
 import com.forum.mantoi.sys.services.CommentService;
 import com.forum.mantoi.sys.services.PostService;
 import com.forum.mantoi.sys.services.SearchService;
-import com.forum.mantoi.sys.services.UserService;
 import com.forum.mantoi.utils.CaffeineUtils;
+import com.forum.mantoi.utils.NullValue;
 import com.forum.mantoi.utils.RedisKeys;
 import com.forum.mantoi.utils.RedisUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -108,10 +107,12 @@ public class PostServiceImpl implements PostService {
         return RestResponse.ok();
     }
 
+    //从DB中拿到数据后要缓存空值
     @Override
     public Post findById(Long id) {
         Post post = postMapper.selectById(id);
         if (Objects.isNull(post)) {
+            RedisUtils.set(id.toString(), NullValue.getInstance(), 60L * 60 * 24);
             throw new BusinessException(CommonResultStatus.RECORD_NOT_EXIST, "post does not exist");
         }
         return post;
@@ -186,6 +187,9 @@ public class PostServiceImpl implements PostService {
             return (PostInformationDto) o;
         }
         Object obj = RedisUtils.get(id);
+        if (obj == NullValue.getInstance()) {
+            return null;
+        }
         if (Objects.nonNull(obj)) {
             return ((PostInformationDto) obj);
         }

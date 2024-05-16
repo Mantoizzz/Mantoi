@@ -43,7 +43,7 @@ public class CacheHotPosts implements Job {
             for (ZSetOperations.TypedTuple<Object> typedTuple : typedTuples) {
                 Object postId = typedTuple.getValue();
                 if (Objects.nonNull(postId)) {
-                    Post post = postService.findById(((long) postId));
+                    Post post = postService.getPostFromDatabase(((long) postId)).getPost();
                     PostContent postContent = postService.getContent(post);
                     if (Objects.isNull(postContent) || Objects.isNull(post)) {
                         continue;
